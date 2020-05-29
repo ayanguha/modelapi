@@ -4,7 +4,7 @@ from flask_restplus import Api
 from sqlalchemy.orm.exc import NoResultFound
 
 
-api = Api(version='1.0', title='Model API',
+api = Api(version='1.0', title='Model API',doc='/doc/',
           description='Model Data Management API')
 
 
