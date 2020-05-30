@@ -195,7 +195,7 @@ sudo apt-get install python-dev
 ### Get the code
 
 ```
-git clone  https://github.com/ayanguha/modelapi
+git clone  https://github.com/ayanguha/modelapi.git
 ```
 
 
