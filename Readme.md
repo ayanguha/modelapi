@@ -178,9 +178,7 @@ Example:
 
 # Sample Project
 
-Link:
-
-# Pre-flight check
+### Pre-flight check
 
 -  Istructions are tested on Ubuntu
 - Git
@@ -197,7 +195,7 @@ sudo apt-get install python-dev
 ### Get the code
 
 ```
-git clone  
+git clone  https://github.com/ayanguha/modelapi
 ```
 
 
