@@ -15,9 +15,9 @@
 Each microservice is defined as separate base url, but all mapped to a same subdomain.
 Example
 
-    /api/virgilant/v1/thirdparty
+    /api/subdomain/v1/thirdparty
     ----------------- -----------
-    Base Virgilant      Microservice URL
+    Base             Microservice URL
     API subdomain
 
 In AWS, this is achieved via multiple API bound to same custom domain with respective subdomains
