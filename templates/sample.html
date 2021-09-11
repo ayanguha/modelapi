@@ -1,0 +1,284 @@
+
+{% extends "base.html" %}
+{% block title %}Single Artefact{% endblock %}
+
+
+{% block content %}
+
+
+
+<div class="panel panel-info">
+
+
+
+ <div class="panel-group">
+    <div class="panel panel-info">
+      <div class="panel-heading"> <h4> Add Account </h4>
+
+          <button class="btn btn-primary " data-toggle="collapse" data-target="#AddAccount">Add Artefact Property</button>
+          <div id="AddAccount" class="collapse">
+            <form>
+              <div class="form-group">
+                <label for="type">Name:</label><input type="text" class="form-control" id="ArtefactPropertyName">
+                <label for="type">Description:</label><input type="text" class="form-control" id="ArtefactPropertyDescription">
+               <label for="type">Property Value:</label><input type="text" class="form-control" id="ArtefactPropertyValue">
+
+                </div>
+              <button type="button" class="btn btn-success" onclick="addArtefactProperty('{{artefactid}}')">Submit</button>
+            </form>
+          </div>
+
+      </div>
+    </div>
+</div>
+
+    <div class="container-fluid">
+ <table class="table table-hover table-striped"
+        data-filter-control="select"
+        data-toggle="table"
+        data-pagination="true"
+        data-page-size="25"
+        data-pagination-V-Align="top">
+             <thead>
+               <tr>
+                 <th> Property Name </th>
+                 <th> Description</th>
+                 <th> Property Value</th>
+                 <th> Action </th>
+               </tr>
+             </thead>
+            <tbody>
+          {% for afs in artefactPropertylist %}
+                   <tr>
+                         <td > {{ afs['propertyname'] }}</td>
+                         <td > {{ afs['description'] }}</td>
+                         <td > {{ afs['propertyvalue'] }}</td>
+                         <td >
+                            <span class="glyphicon glyphicon-remove" onclick="deleteArtefactProperty('{{afs['artefactid']}}', '{{afs['artefactpropertyid']}}')"></span>
+                            <span class="glyphicon glyphicon-pencil" onclick="setAndOpenArtefactPropertyModal('{{afs['artefactid']}}', '{{afs['artefactpropertyid']}}')"></span>
+                         </td>
+
+                    </tr>
+
+            {% endfor %}
+             </tbody>
+           </table>
+    </div>
+
+    <div class="panel-group">
+       <div class="panel panel-info">
+         <div class="panel-heading"> <h4> Artefact Property </h4>
+
+             <button class="btn btn-primary " data-toggle="collapse" data-target="#AddArtefactProperty">Add Artefact Property</button>
+             <div id="AddArtefactProperty" class="collapse">
+               <form>
+                 <div class="form-group">
+                   <label for="type">Name:</label><input type="text" class="form-control" id="ArtefactPropertyName">
+                   <label for="type">Description:</label><input type="text" class="form-control" id="ArtefactPropertyDescription">
+                  <label for="type">Property Value:</label><input type="text" class="form-control" id="ArtefactPropertyValue">
+
+                   </div>
+                 <button type="button" class="btn btn-success" onclick="addArtefactProperty('{{artefactid}}')">Submit</button>
+               </form>
+             </div>
+
+         </div>
+       </div>
+    </div>
+
+       <div class="container-fluid">
+    <table class="table table-hover table-striped"
+           data-filter-control="select"
+           data-toggle="table"
+           data-pagination="true"
+           data-page-size="25"
+           data-pagination-V-Align="top">
+                <thead>
+                  <tr>
+                    <th> Property Name </th>
+                    <th> Description</th>
+                    <th> Property Value</th>
+                    <th> Action </th>
+                  </tr>
+                </thead>
+               <tbody>
+             {% for afs in artefactPropertylist %}
+                      <tr>
+                            <td > {{ afs['propertyname'] }}</td>
+                            <td > {{ afs['description'] }}</td>
+                            <td > {{ afs['propertyvalue'] }}</td>
+                            <td >
+                               <span class="glyphicon glyphicon-remove" onclick="deleteArtefactProperty('{{afs['artefactid']}}', '{{afs['artefactpropertyid']}}')"></span>
+                               <span class="glyphicon glyphicon-pencil" onclick="setAndOpenArtefactPropertyModal('{{afs['artefactid']}}', '{{afs['artefactpropertyid']}}')"></span>
+                            </td>
+
+                       </tr>
+
+               {% endfor %}
+                </tbody>
+              </table>
+       </div>
+
+
+
+
+<div id="UpdateArtefactPropertyModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Update Artefact Property Details</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group"  >
+               <label for="UpdateArtefactPropertyHiddenid">ID</label>
+               <input class="form-control" id="UpdateArtefactPropertyHiddenid" name="UpdateArtefactPropertyHiddenid" placeholder="" type="text" readonly />
+               <label for="UpdateArtefactPropertypropertyname">Name</label>
+               <input class="form-control" id="UpdateArtefactPropertypropertyname" name="UpdateArtefactPropertypropertyname" placeholder="" type="text" />
+               <label for="UpdateArtefactdescription">Description</label>
+               <input class="form-control" id="UpdateArtefactdescription" name="UpdateArtefactdescription" placeholder="" type="text" />
+               <label for="UpdateArtefactpropertyvalue">Value</label>
+               <input class="form-control" id="UpdateArtefactpropertyvalue" name="UpdateArtefactpropertyvalue" placeholder="" type="text" />
+
+               </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-success" onclick="updateArtefactProperty('{{artefactid}}')">Save changes</button>
+      </div>
+      </div>
+
+    </div>
+  </div>
+
+
+<div id="UpdateArtefactProcessPropertyModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Update Artefact Property Details</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group"  >
+               <label for="UpdateArtefactProcessPropertyHiddenid">ID</label>
+               <input class="form-control" id="UpdateArtefactProcessPropertyHiddenid" name="UpdateArtefactProcessPropertyHiddenid" placeholder="" type="text" readonly />
+               <label for="UpdateArtefactprocesspropertyvalue">Value</label>
+               <input class="form-control" id="UpdateArtefactprocesspropertyvalue" name="UpdateArtefactprocesspropertyvalue" placeholder="" type="text" />
+
+               </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-success" onclick="updateArtefactProcessProperty('{{artefactid}}')">Save changes</button>
+      </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div id="CreateArtefactProcessPropertyModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Update Artefact Property Details</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group"  >
+               <label for="CreateArtefactProcessPropertyHiddenid">Property Name</label>
+               <input class="form-control" id="CreateArtefactProcessPropertyHiddenName" name="CreateArtefactProcessPropertyHiddenName" placeholder="" type="text" readonly />
+               <label for="CreateArtefactprocesspropertyvalue">Property Value</label>
+               <input class="form-control" id="CreateArtefactprocesspropertyvalue" name="CreateArtefactprocesspropertyvalue" placeholder="" type="text" />
+               <input class="form-control" id="CreateArtefactprocesspropertyid" name="CreateArtefactprocesspropertyid" placeholder="" type="hidden" />
+               <input class="form-control" id="CreateAPPprocessid" name="CreateAPPprocessid" placeholder="" type="hidden" />
+               <input class="form-control" id="CreateAPPprocessgroupid" name="CreateAPPprocessgroupid" placeholder="" type="hidden" />
+               <input class="form-control" id="CreateAPPartefactid" name="CreateAPPartefactid" placeholder="" type="hidden" />
+
+               </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-success" onclick="addArtefactProcessProperty('{{artefactid}}')">Save changes</button>
+      </div>
+      </div>
+
+    </div>
+  </div>
+
+
+<div id="UpdateArtefactAttributeModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Update Attributes Details</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group"  >
+               <label for="UpdateArtefactAttributeHiddenid">ID</label>
+               <input class="form-control" id="UpdateArtefactAttributeHiddenid" name="UpdateArtefactAttributeHiddenid" placeholder="" type="text" readonly />
+               <label for="updateartefactattributeisidentifier">isidentifier</label>
+               <select class="form-control" name="option"  id="updateartefactattributeisidentifier">
+                       <option value=1 >yes</option>
+                       <option value=0 >no</option>
+                  </select class="form-control">
+
+               <label for="updateartefactattributeisnullable">isnullable</label>
+               <select class="form-control" name="option"  id="updateartefactattributeisnullable">
+                       <option value=1 >yes</option>
+                       <option value=0 >no</option>
+                  </select class="form-control">
+               <div></div>
+               <label for="updateartefactattributetechnicalname">technicalname</label>
+               <input class="form-control" id="updateartefactattributetechnicalname" name="updateartefactattributetechnicalname" placeholder="" type="text" />
+               <label for="updateartefactattributebusinessname">businessname</label>
+               <input class="form-control" id="updateartefactattributebusinessname" name="updateartefactattributebusinessname" placeholder="" type="text" />
+               <label>artefact data type:</label>
+                     <select class="form-control" name="option"  id="updateartefactattributedatatypeid">
+                        <option value="String">String</option>
+                        <option value="Numeric">Numeric</option>
+                        <option value="Date">Date</option>
+                        <option value="Datetime">Datetime</option>
+                        <option value="Varchar">Varchar</option>
+                        <option value="NVarchar">NVarchar</option>
+                     </select class="form-control">
+
+               <label>Position</label>
+                  <select class="form-control" name="option"  id="updateartefactattributeordinalposition">
+                     {% for k in range(1,101) %}
+
+                         <option value="{{ k }}" >{{ k }}</option>
+                              {% endfor %}
+                  </select class="form-control">
+
+
+               <label for="updateartefactattributeprecision">precision</label>
+               <input class="form-control" id="updateartefactattributeprecision" name="updateartefactattributeprecision" placeholder="" type="text" />
+               <label for="updateartefactattributescale">scale</label>
+               <input class="form-control" id="updateartefactattributescale" name="updateartefactattributescale" placeholder="" type="text" />
+               <label for="updateartefactattributemaxlength">maxlength</label>
+               <input class="form-control" id="updateartefactattributemaxlength" name="updateartefactattributemaxlength" placeholder="" type="text" />
+
+
+               </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-success" onclick="updateArtefactAttribute('{{ artefactid }} ')">Save changes</button>
+      </div>
+      </div>
+
+    </div>
+  </div>
+
+{% endblock %}

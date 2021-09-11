@@ -3,10 +3,18 @@ from flask import Flask,request,Response,jsonify,Blueprint
 from flask_sqlalchemy import SQLAlchemy
 from api.endpoints.data import ns as dataNS
 from api.define import api
+from api.endpoints.ui import *
+
 import settings
 from api.handlers.handlers import db
 
 app = Flask(__name__)
+
+pageUIMapping = [ [UIHandler,"/"],
+                  [UIHandler,"/ui"] ,
+                  [UIHandler,"/ui/"],
+                  [SampleUIHandler,"/ui/sample"],
+                 ]
 
 def configure_app(flask_app):
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = settings.SQLALCHEMY_DATABASE_URI
@@ -17,6 +25,11 @@ def initialize_app(flask_app):
     blueprint = Blueprint('api', __name__)
     api.init_app(blueprint)
     api.add_namespace(dataNS)
+    for pm in pageUIMapping:
+        handler = pm[0]
+        path = pm[1]
+        api.add_resource(handler,path)
+    
     flask_app.register_blueprint(blueprint)
     db.app = flask_app
     db.init_app(flask_app)
