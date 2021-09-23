@@ -7,7 +7,7 @@ from ..handlers.handlers import *
 ############################################################################################
 def getUIConfig():
     uiconfig = {}
-    uiconfig['backgrouound_color'] = '#5cd65c'
+    uiconfig['backgrouound_color'] = '#5cb85c'
     uiconfig['localenv'] = 'dev'
 
     return uiconfig
@@ -30,5 +30,30 @@ class SampleUIHandler(Resource):
         print(afs)
         return make_response(
                 render_template('sample.html',uiconfig=getUIConfig(),
+                             lst=afs ), 200,headers)
+############################################################################################
+
+############################################################################################
+
+class AlertsUIHandler(Resource):
+
+    def get(self):
+        headers = {'Content-Type': 'text/html'}
+        afs = getAllAccount()
+        print(afs)
+        return make_response(
+                render_template('alerts.html',uiconfig=getUIConfig(),
+                             lst=afs ), 200,headers)
+############################################################################################
+############################################################################################
+
+class EdicategoryUIHandler(Resource):
+
+    def get(self):
+        headers = {'Content-Type': 'text/html'}
+        afs = getAllAccount()
+        print(afs)
+        return make_response(
+                render_template('edi_category.html',uiconfig=getUIConfig(),
                              lst=afs ), 200,headers)
 ############################################################################################

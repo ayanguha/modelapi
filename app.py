@@ -14,6 +14,8 @@ pageUIMapping = [ [UIHandler,"/"],
                   [UIHandler,"/ui"] ,
                   [UIHandler,"/ui/"],
                   [SampleUIHandler,"/ui/sample"],
+                  [AlertsUIHandler, "/ui/alerts"],
+                  [EdicategoryUIHandler, "/ui/edicategory"]
                  ]
 
 def configure_app(flask_app):
@@ -29,7 +31,7 @@ def initialize_app(flask_app):
         handler = pm[0]
         path = pm[1]
         api.add_resource(handler,path)
-    
+
     flask_app.register_blueprint(blueprint)
     db.app = flask_app
     db.init_app(flask_app)
