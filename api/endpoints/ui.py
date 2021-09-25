@@ -39,21 +39,45 @@ class AlertsUIHandler(Resource):
 
     def get(self):
         headers = {'Content-Type': 'text/html'}
-        afs = getAllAccount()
-        print(afs)
+        aaa = getAllAlerts()
         return make_response(
                 render_template('alerts.html',uiconfig=getUIConfig(),
-                             lst=afs ), 200,headers)
+                             lst=aaa ), 200,headers)
 ############################################################################################
+
+############################################################################################
+
+class FileHistoryUIHandler(Resource):
+
+    def get(self):
+        headers = {'Content-Type': 'text/html'}
+        aaa = getAllFiles()
+        return make_response(
+                render_template('file_history.html',uiconfig=getUIConfig(),
+                             lst=aaa ), 200,headers)
+############################################################################################
+
 ############################################################################################
 
 class EdicategoryUIHandler(Resource):
 
     def get(self):
         headers = {'Content-Type': 'text/html'}
-        afs = getAllAccount()
-        print(afs)
+        afs = getAllEdiCategory()
         return make_response(
                 render_template('edi_category.html',uiconfig=getUIConfig(),
+                             lst=afs ), 200,headers)
+############################################################################################
+
+############################################################################################
+
+class SingleFileUIHandler(Resource):
+
+    def get(self):
+        headers = {'Content-Type': 'text/html'}
+        afs = getSingleFile(request.args.get('file_name'))
+        print(afs)
+        return make_response(
+                render_template('single_file.html',uiconfig=getUIConfig(),
                              lst=afs ), 200,headers)
 ############################################################################################

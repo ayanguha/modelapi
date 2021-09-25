@@ -30,13 +30,19 @@
       integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
       crossorigin="anonymous">
 
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
+
 <title>{% block title %}{% endblock %} </title>
 
 <script type="text/javascript">
 var SampleURL =  "{{ url_for('api.v1_account_record_request') }}";
 
+var EDICategoryURL =  "{{ url_for('api.v1_edi_category_request') }}";
+var SingleEDICategoryURL =  "{{ url_for('api.v1_single_edi_category_request', edi_category_id='edi_category_id') }}";
 
 </script>
+<script src="/static/js/dbm.js"></script>
 
 
 <style>
@@ -164,7 +170,7 @@ footer  {
         <li class="nav-item ">
           <a class="nav-link" href="{{ url_for('api.ui_handler')}}">Home</a>
         </li>
-        <li class="nav-item active">
+        <li class="nav-item">
           <a class="nav-link" href="{{ url_for('api.alerts_ui_handler')}}">Alerts</a>
         </li>
         <li class="nav-item">
@@ -172,6 +178,9 @@ footer  {
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Accruals</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('api.file_history_ui_handler')}}">File history</a>
         </li>
         <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

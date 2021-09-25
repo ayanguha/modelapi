@@ -1,0 +1,26 @@
+service: modelapi
+provider:
+  name: aws
+  runtime: python3.8
+  stage: dev
+  region: ap-southeast-2
+  memorySize: 512
+  timeout: 60
+  profile: ${self:custom.profiles.${sls:stage}}
+
+plugins:
+  - serverless-wsgi
+  - serverless-python-requirements
+custom:
+  profiles:
+    dev: modelapi
+    prod: modelapi
+  wsgi:
+    app: app.app
+
+functions:
+  app:
+    handler: wsgi_handler.handler
+    events:
+      - http: ANY /
+      - http: 'ANY {proxy+}'

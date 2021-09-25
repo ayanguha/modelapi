@@ -1,0 +1,58 @@
+
+{% extends "base.html" %}
+{% block title %}File History{% endblock %}
+
+
+{% block content %}
+
+
+  <div class="container-fluid">
+
+    <table class="table table-hover table-striped" data-filter-control="select"
+           data-toggle="table"
+           data-search="true"
+           data-pagination="true"
+           data-page-size="50"
+           data-pagination-V-Align="top">
+          <thead>
+            <tr>
+              <th data-field="description" data-sortable="true">Name</th>
+              <th>Latest Processed Version</th>
+              <th data-field="processed" data-sortable="true">Latest Processed Time</th>
+              <th>Latest Status</th>
+              <th>Show Details</th>
+            </tr>
+          </thead>
+         <tbody>
+            {% for record in lst %}
+
+                   <tr>
+                     <td> {{ record['description'] }} </td>
+                     <td> {{ record['latest']['version']['version'] }} </td>
+                     <td> {{ record['latest']['version']['processed'] }} </td>
+
+                     <td>
+                       {% if record['latest']['version']['success']   %}
+                           <span class="pull-left badge badge-pill badge-success">Success</span>
+                       {% else %}
+                           <span class="pull-left badge badge-pill badge-danger">{{ record['latest']['version']['number_of_errors'] }} Errors</span>
+                       {% endif %}
+                     </td>
+
+
+                     <td>
+                       <a href="{{ url_for('api.single_file_ui_handler', file_name=record['name']) }} " >
+                       <span class="badge badge-pill badge-primary">File Details</span>
+                     </a>
+                     </td>
+
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+
+
+
+  </div>
+
+{% endblock %}

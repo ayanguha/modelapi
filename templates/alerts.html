@@ -7,54 +7,46 @@
 
 
   <div class="container-fluid">
-  <table class="table">
-    <thead class="thead-dark">
-      <tr>
-        <th scope="col"> File Details </th>
-        <th scope="col">Time Processed</th>
-        <th scope="col">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <div id="ACS-202108-DR-All-PPM-116046_TOP">
+    <table class="table table-hover table-striped" data-filter-control="select"
+           data-toggle="table"
+           data-search="true"
+           data-pagination="true"
+           data-page-size="20"
+           data-pagination-V-Align="top">
+          <thead>
+            <tr>
+              <th>  Name </th>
+            </tr>
+          </thead>
+         <tbody>
+    {% for alert in lst %}
+    <tr>
+      <td>
+          <div id="{{ alert['name']}}_TOP">
               <div class="card">
                <div class="card-header" id="headingOne">
                  <h5 class="mb-0">
-                   <button class="btn btn-link" data-toggle="collapse" data-target="#ACS-202108-DR-All-PPM-116046" aria-expanded="true" aria-controls="collapseOne">
-                     ACS-202108-DR-All-PPM-116046
+                   <button class="btn btn-link" data-toggle="collapse" data-target="#{{ alert['name']}}" aria-expanded="true" aria-controls="collapseOne">
+                     {{ alert['description']}}
                    </button>
+                   <span class="badge badge-danger"> {{ alert['number_of_errors'] }}</span>
                  </h5>
                </div>
 
-               <div id="ACS-202108-DR-All-PPM-116046" class="collapse" aria-labelledby="headingOne" data-parent="#ACS-202108-DR-All-PPM-116046_TOP">
+               <div id="{{ alert['name']}}" class="collapse" aria-labelledby="headingOne" data-parent="#{{ alert['name']}}_TOP">
                  <div class="card-body">
-                   <div class="card">
-                    <div class="card-header" id="headingOne">
-                      <h5 class="mb-0">
-                        <button class="btn btn-link" data-toggle="collapse" data-target="#ACS-202108-DR-All-PPM-116046_DETAILS" aria-expanded="true" aria-controls="collapseOne">
-                          Version Detail
-                        </button>
-                      </h5>
-                    </div>
 
-                    <div id="ACS-202108-DR-All-PPM-116046_DETAILS" class="collapse" aria-labelledby="headingOne" data-parent="#ACS-202108-DR-All-PPM-116046">
-                      <div class="card-body">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                      </div>
-                    </div>
-                   </div>
+
                    <div class="card">
                     <div class="card-header" id="headingOne">
                       <h5 class="mb-0">
-                        <button class="btn btn-link" data-toggle="collapse" data-target="#ACS-202108-DR-All-PPM-116046_ERR" aria-expanded="true" aria-controls="collapseOne">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#{{ alert['name']}}_VAL" aria-expanded="true" aria-controls="collapseOne">
                           Validation Details
                         </button>
                       </h5>
                     </div>
 
-                    <div id="ACS-202108-DR-All-PPM-116046_ERR" class="collapse" aria-labelledby="headingOne" data-parent="#ACS-202108-DR-All-PPM-116046">
+                    <div id="{{ alert['name']}}_VAL" class="collapse" aria-labelledby="headingOne" data-parent="#{{ alert['name']}}">
                       <div class="card-body">
                         <table class="table">
                           <thead class="thead-dark">
@@ -66,22 +58,19 @@
                             </tr>
                           </thead>
                           <tbody>
+                            {% for validation in alert['latest']['version']['validations'] %}
                             <tr>
-                              <td>  Rule 1   </td>
-                              <td>  Msg 1   </td>
+                              <td>  {{ validation['rule_name']}}   </td>
+                              <td>  {{ validation['msg']}}   </td>
+                              {% if validation['succes']  %}
                               <td> <span class="pull-left badge badge-pill badge-success">Success</span> </td>
-                            </tr>
-                            <tr class="table-danger">
-                              <td>  Rule 2   </td>
-                              <td>  Msg 2   </td>
-                              <td> <span class="pull-left badge badge-pill badge-primary">Resolve</span> <span class="fa fa-download pull-left"></span> </td>
-                            </tr>
-                            <tr class="table-danger">
-                              <td>  Rule 3   </td>
-                              <td>  Msg 3   </td>
-                              <td>  <span class="pull-left badge badge-pill badge-primary">Resolve</span> <span class="fa fa-download pull-left"></span> </td>
+                              {% else %}
+                              <td> <span class="pull-left badge badge-pill badge-danger">Resolve</span> <span class="pull-left badge badge-pill badge-secondary">Show More</span>  </td>
+
+                              {% endif %}
                             </tr>
 
+                           {% endfor %}
                             </tbody>
                           </table>
                       </div>
@@ -91,94 +80,12 @@
                </div>
               </div>
             </div>
-        </td>
-        <td>2021-09-20 20:00:01</td>
-        <td><span class="fa fa-download pull-left"></span> <span class="pull-left badge badge-pill badge-danger">2 Error</span></td>
-      </tr>
-      <tr>
-          <td>
 
-              <div id="Chubb-202108-DR-All-PPM-6518733_TOP">
-                  <div class="card">
-                   <div class="card-header" id="headingOne">
-                     <h5 class="mb-0">
-                       <button class="btn btn-link" data-toggle="collapse" data-target="#Chubb-202108-DR-All-PPM-6518733" aria-expanded="true" aria-controls="collapseOne">
-                         Chubb-202108-DR-All-PPM-6518733
-                       </button>
-                     </h5>
-                   </div>
-
-                   <div id="Chubb-202108-DR-All-PPM-6518733" class="collapse" aria-labelledby="headingOne" data-parent="#Chubb-202108-DR-All-PPM-6518733_TOP">
-                     <div class="card-body">
-                       <div class="card">
-                        <div class="card-header" id="headingOne">
-                          <h5 class="mb-0">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#Chubb-202108-DR-All-PPM-6518733_DETAILS" aria-expanded="true" aria-controls="collapseOne">
-                              Version Detail
-                            </button>
-                          </h5>
-                        </div>
-
-                        <div id="Chubb-202108-DR-All-PPM-6518733_DETAILS" class="collapse" aria-labelledby="headingOne" data-parent="#Chubb-202108-DR-All-PPM-6518733">
-                          <div class="card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                          </div>
-                        </div>
-                       </div>
-                       <div class="card">
-                        <div class="card-header" id="headingOne">
-                          <h5 class="mb-0">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#Chubb-202108-DR-All-PPM-6518733_ERR" aria-expanded="true" aria-controls="collapseOne">
-                              Validation Detail
-                            </button>
-                          </h5>
-                        </div>
-
-                        <div id="Chubb-202108-DR-All-PPM-6518733_ERR" class="collapse" aria-labelledby="headingOne" data-parent="#Chubb-202108-DR-All-PPM-6518733">
-                          <div class="card-body">
-                            <table class="table">
-                              <thead class="thead-dark">
-                                <tr>
-                                  <th scope="col"> Validation Rule </th>
-                                  <th scope="col"> Message </th>
-                                  <th scope="col">Validation Status</th>
-
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td>  Rule 1   </td>
-                                  <td>  Msg 1   </td>
-                                  <td> <span class="pull-left badge badge-pill badge-success">Success</span> </td>
-                                </tr>
-                                <tr>
-                                  <td>  Rule 2   </td>
-                                  <td>  Msg 2   </td>
-                                  <td>  <span class="pull-left badge badge-pill badge-success">Success</span></td>
-                                </tr>
-                                <tr>
-                                  <td>  Rule 3   </td>
-                                  <td>  Msg 3   </td>
-                                  <td>  <span class="pull-left badge badge-pill badge-success">Success</span> </td>
-                                </tr>
-
-                                </tbody>
-                              </table>
-                          </div>
-                        </div>
-                       </div>
-                     </div>
-                   </div>
-                  </div>
-                </div>
-
-            </td>
-        <td>2021-09-20 10:00:01</td>
-        <td><span class="fa fa-download pull-left"></span> <span class="pull-left badge badge-pill badge-success">Success</span></td>
-      </tr>
-
-    </tbody>
-  </table>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
 
 
   </div>

@@ -4,7 +4,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from flask_restplus import reqparse
 from datetime import datetime
 from flask import request,url_for,render_template,make_response,jsonify,redirect,url_for
-
+import random, json,os
 
 def safeCommit():
     try:
@@ -18,7 +18,7 @@ def safeFlush():
     try:
         db.session.flush()
     except:
-        
+
         db.session.rollback()
         raise
 
@@ -31,7 +31,6 @@ def modelExists(db,model):
 
 def createAllModels(db):
     db.create_all()
-
 
 def AccountResponseModification(list_account, params = {'expand': {'account': True}}):
     modified_account_response_list = []
@@ -69,6 +68,92 @@ def getAllAccount():
         return AccountResponseModification(qryRes) #[i.serialize for i in qryRes]
     else:
         pass
+
+
+
+def readGlobalFileHistoryData():
+    SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+    json_uri = os.path.join(SITE_ROOT, 'file_details.json')
+    with open(json_uri) as fo:
+        return json.load(fo)
+
+def getAllAlerts():
+    all = readGlobalFileHistoryData()
+    res = []
+    for x in all:
+        if x['latest']['version']['number_of_errors'] > 0:
+            d = {}
+            d['name'] = x['name']
+            d['description'] = x['description']
+            d['latest'] = x['latest']
+            res.append(d)
+    return res
+
+def getAllFiles():
+    all = readGlobalFileHistoryData()
+    return all
+
+def getSingleFile(file_name):
+    all = readGlobalFileHistoryData()
+    res = []
+    for x in all:
+        if x['name'] == file_name:
+            res.append(x)
+
+    return res
+
+def readGlobalEDICategoryData():
+    SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+    json_uri = os.path.join(SITE_ROOT, 'edi_category.json')
+    with open(json_uri) as fo:
+        return json.load(fo)
+
+def writeGlobalEDICategoryData(d):
+    SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+    json_uri = os.path.join(SITE_ROOT, 'edi_category.json')
+    with open(json_uri,'w') as fo:
+        return json.dump(d,fo, indent=4)
+
+def getAllEdiCategory():
+    return readGlobalEDICategoryData()
+
+def addEdiCategory(name):
+    edi_category_global = readGlobalEDICategoryData()
+    edi_category_global.append({'name': name, 'edi_category_id': random.randint(1,10000)})
+    writeGlobalEDICategoryData(edi_category_global)
+    return readGlobalEDICategoryData()
+
+def updateEdiCategory(edi_category_id,name):
+    print("edi_category_id:" + str(edi_category_id) + "  Name:" + name)
+    edi_category_local = []
+    edi_category_global = readGlobalEDICategoryData()
+    for ec in edi_category_global:
+        if ec['edi_category_id'] == int(edi_category_id.strip()):
+            ec['name'] = name
+    print("-----------------------------------")
+    print(edi_category_global)
+    print("-----------------------------------")
+    writeGlobalEDICategoryData(edi_category_global)
+    return readGlobalEDICategoryData()
+
+def getEdiCategory(edi_category_id):
+    edi_category_local = []
+    edi_category_global = readGlobalEDICategoryData()
+    for ec in edi_category_global:
+        if  ec['edi_category_id'] == int(edi_category_id.strip()):
+            edi_category_local.append(ec)
+    return edi_category_local
+
+def deleteEdiCategory(edi_category_id):
+    edi_category_local = []
+    edi_category_global = readGlobalEDICategoryData()
+    for ec in edi_category_global:
+        if ec['edi_category_id'] == int(edi_category_id.strip()):
+            pass
+        else:
+            edi_category_local.append(ec)
+    writeGlobalEDICategoryData(edi_category_local)
+    return readGlobalEDICategoryData()
 
 def getSingleAccount(account_id):
     qryRes = Account\

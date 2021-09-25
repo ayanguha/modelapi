@@ -11,6 +11,16 @@ AccountRecord = api.model('Account Record ', {
     'parent_account_id': fields.String()
 })
 
+BasicRecord = api.model('Simple Record ', {
+    'name': fields.String(required=True)
+})
+
+def BasicResponse(lst):
+    response = BaseResponse()
+    for a in lst:
+        response['data'].append(a)
+    return response
+
 def parseInputDatetime(s):
     return  datetime.strptime(s,'%Y-%m-%dT%H:%M:%S.%fZ')
 
@@ -62,23 +72,28 @@ class SingleAccountRequest(Resource):
         response = getSingleAccount(account_id)
         return AccountResponse(response), 200
 
-'''
-@ns.route('/device')
-class Device(Resource):
-    @api.expect(DeviceRecordRequest)
+###########################################################
+@ns.route('/dbm/edi_category')
+class EDICategoryRequest(Resource):
+    @api.expect(BasicRecord)
     def post(self):
-        print(request.json)
-        response = {'id': createDevice(request.json)}
-        return response,201
+        response = addEdiCategory(request.json['name'])
+        return BasicResponse(response),201
 
     def get(self):
-        response = {'data': {}}
-        return response, 200
+        response = getAllEdiCategory()
+        return BasicResponse(response), 200
 
-@ns.route('/device/<string:device_id>')
-class SingleDevice(Resource):
-    def get(self,device_id):
-        did = getSingleDevice(device_id)
-        response = {'idUrl': url_for('api.v1_single_device',device_id=did, _external=True)}
-        return response, 200
-'''
+@ns.route('/dbm/edi_category/<string:edi_category_id>')
+class SingleEDICategoryRequest(Resource):
+    def put(self, edi_category_id):
+        response = updateEdiCategory(edi_category_id, request.json['name'])
+        return BasicResponse(response),201
+
+    def get(self, edi_category_id):
+        response = getEdiCategory(edi_category_id)
+        return BasicResponse(response), 200
+
+    def delete(self, edi_category_id):
+        response = deleteEdiCategory(edi_category_id)
+        return BasicResponse(response), 200

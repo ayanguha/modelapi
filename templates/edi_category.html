@@ -1,6 +1,6 @@
 
 {% extends "base.html" %}
-{% block title %}Single Artefact{% endblock %}
+{% block title %} EDI Category{% endblock %}
 
 
 {% block content %}
@@ -8,32 +8,33 @@
 
 <div class="container-fluid">
 
-  <div id="EDIFileIDTOP">
+  <div id="EDICategoryTOP">
       <div class="card">
        <div class="card-header" id="headingOne">
          <h5 class="mb-0">
-           <button class="btn btn-primary" data-toggle="collapse" data-target="#EDIFileID" aria-expanded="true" aria-controls="collapseOne">
+           <button class="btn btn-primary" data-toggle="collapse" data-target="#EDICategory" aria-expanded="true" aria-controls="collapseOne">
              Add EDI Category
            </button>
          </h5>
        </div>
 
 
-         <div id="EDIFileID" class="collapse" aria-labelledby="headingOne" data-parent="#EDIFileIDTOP">
+         <div id="EDICategory" class="collapse" aria-labelledby="headingOne" data-parent="#EDICategoryTOP">
            <form>
              <div class="form-group">
-               <label for="type">Name:</label><input type="text" class="form-control" id="EDIFileIDName">
+               <label for="type">Name:</label><input type="text" class="form-control" id="EDICategoryName">
 
                </div>
-             <button type="button" class="btn btn-success" onclick="#">Submit</button>
+             <button type="button" class="btn btn-success" onclick="addEdiCategory()">Submit</button>
            </form>
          </div>
 
          <div class="container-fluid">
             <table class="table table-hover table-striped" data-filter-control="select"
                    data-toggle="table"
+                   data-search="true"
                    data-pagination="true"
-                   data-page-size="25"
+                   data-page-size="3"
                    data-pagination-V-Align="top">
                   <thead>
                     <tr>
@@ -42,15 +43,16 @@
                     </tr>
                   </thead>
                  <tbody>
+                   {% for ec in lst %}
                          <tr>
-                              <td > HO </td>
+                              <td > {{ ec['name']}} </td>
                               <td >
-                                 <span class="fa fa-remove" onclick="#"></span>
-                                 <span class="fa fa-pencil" onclick="#"></span>
+                                 <span class="fa fa-remove" onclick="deleteEDICategory('{{ ec['edi_category_id']}}')"></span>
+                                 <span class="fa fa-pencil" onclick="setAndOpenEDICategoryModal('{{ ec['edi_category_id']}}')"></span>
                               </td>
 
                          </tr>
-
+                  {% endfor %}
                   </tbody>
                 </table>
          </div>
@@ -59,4 +61,144 @@
       </div>
     </div>
 
+
+    <div id="UpdateEDICategoryModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Update EDI Category</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+
+            </div>
+            <div class="modal-body">
+              <div class="form-group"  >
+                   <label for="UpdEDICategoryHiddenid">ID</label>
+                   <input class="form-control" type="hidden" id="UpdEDICategoryHiddenid" name="UpdEDICategoryHiddenid" placeholder="" type="text" readonly />
+                   <label for="UpdEDICategoryName">Name</label>
+                   <input class="form-control" id="UpdEDICategoryName" name="updateartefactattributebusinessname" placeholder="EDI Category Name..." type="text" />
+                 </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-success" onclick="updateEDICategory('{{ edi_category_id }} ')">Save changes</button>
+          </div>
+          </div>
+
+        </div>
+      </div>
+
+<<script type="text/javascript">
+
+  function redirectHome() {
+
+      window.location = location.href;
+  }
+
+  function addEdiCategory() {
+
+      var data = {
+          "name": $('#EDICategoryName').val(),
+
+      };
+
+
+
+      var formData = JSON.stringify(data);
+      $.ajax({
+          type: "POST",
+          cache: false,
+          data: formData,
+          contentType: 'application/json',
+          url: EDICategoryURL,
+          success: function(result) {
+              redirectHome();
+          },
+          error: function(xhr, status, error) {
+              alert(status);
+              alert(xhr.responseText);
+              redirectHome();
+          }
+      });
+  }
+
+
+  function setAndOpenEDICategoryModal(edi_category_id) {
+      $('#UpdEDICategoryHiddenid').val(edi_category_id);
+      var url = SingleEDICategoryURL.replace("edi_category_id", edi_category_id);
+      $.ajax({
+          type: "GET",
+          cache: false,
+          dataType: 'json',
+          contentType: 'application/json',
+          url: url,
+          success: function(results) {
+              var result = results.data[0];
+
+              $('#UpdEDICategoryName').val(result.name);
+              $('#UpdateEDICategoryModal').modal('show');
+          },
+          error: function(xhr, status, error) {
+              alert(status);
+              alert(xhr.responseText);
+              redirectHome();
+          }
+      });
+  }
+
+  function updateEDICategory() {
+      var edi_category_id = $('#UpdEDICategoryHiddenid').val();
+      var url = SingleEDICategoryURL.replace("edi_category_id", edi_category_id);
+      var data = {
+          "name": $('#UpdEDICategoryName').val(),
+
+      };
+
+      var formData = JSON.stringify(data);
+
+      $.ajax({
+          type: "PUT",
+          cache: false,
+          data: formData,
+          contentType: 'application/json',
+          url: url,
+          success: function(result) {
+              redirectHome();
+          },
+          error: function(xhr, status, error) {
+              alert(status);
+              alert(xhr.responseText);
+              redirectHome();
+          }
+      });
+  }
+
+  function deleteEDICategory(edi_category_id) {
+      var data = {};
+
+      var url = SingleEDICategoryURL.replace("edi_category_id", edi_category_id);
+
+      var formData = JSON.stringify(data);
+      $.ajax({
+          type: "DELETE",
+          cache: false,
+          data: formData,
+          contentType: 'application/json',
+          url: url,
+          success: function(result) {
+              redirectHome();
+          },
+          error: function(xhr, status, error) {
+              alert(status);
+              alert(xhr.responseText);
+              redirectHome();
+          }
+      });
+  }
+
+
+</script>
 {% endblock %}
