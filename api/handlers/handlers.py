@@ -6,31 +6,7 @@ from datetime import datetime
 from flask import request,url_for,render_template,make_response,jsonify,redirect,url_for
 import random, json,os
 
-def safeCommit():
-    try:
-        db.session.commit()
-    except:
 
-        db.session.rollback()
-        raise
-
-def safeFlush():
-    try:
-        db.session.flush()
-    except:
-
-        db.session.rollback()
-        raise
-
-def modelExists(db,model):
-    try:
-        r = db.session.query(model).one()
-        return True
-    except:
-        return False
-
-def createAllModels(db):
-    db.create_all()
 
 def AccountResponseModification(list_account, params = {'expand': {'account': True}}):
     modified_account_response_list = []
@@ -114,46 +90,6 @@ def writeGlobalEDICategoryData(d):
     with open(json_uri,'w') as fo:
         return json.dump(d,fo, indent=4)
 
-def getAllEdiCategory():
-    return readGlobalEDICategoryData()
-
-def addEdiCategory(name):
-    edi_category_global = readGlobalEDICategoryData()
-    edi_category_global.append({'name': name, 'edi_category_id': random.randint(1,10000)})
-    writeGlobalEDICategoryData(edi_category_global)
-    return readGlobalEDICategoryData()
-
-def updateEdiCategory(edi_category_id,name):
-    print("edi_category_id:" + str(edi_category_id) + "  Name:" + name)
-    edi_category_local = []
-    edi_category_global = readGlobalEDICategoryData()
-    for ec in edi_category_global:
-        if ec['edi_category_id'] == int(edi_category_id.strip()):
-            ec['name'] = name
-    print("-----------------------------------")
-    print(edi_category_global)
-    print("-----------------------------------")
-    writeGlobalEDICategoryData(edi_category_global)
-    return readGlobalEDICategoryData()
-
-def getEdiCategory(edi_category_id):
-    edi_category_local = []
-    edi_category_global = readGlobalEDICategoryData()
-    for ec in edi_category_global:
-        if  ec['edi_category_id'] == int(edi_category_id.strip()):
-            edi_category_local.append(ec)
-    return edi_category_local
-
-def deleteEdiCategory(edi_category_id):
-    edi_category_local = []
-    edi_category_global = readGlobalEDICategoryData()
-    for ec in edi_category_global:
-        if ec['edi_category_id'] == int(edi_category_id.strip()):
-            pass
-        else:
-            edi_category_local.append(ec)
-    writeGlobalEDICategoryData(edi_category_local)
-    return readGlobalEDICategoryData()
 
 def getSingleAccount(account_id):
     qryRes = Account\

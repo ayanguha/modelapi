@@ -52,26 +52,23 @@ class Account(db.Model):
        response_payload['is_diabled'] = self.is_diabled
        return response_payload
 
-class Device(db.Model):
-    account_id = db.Column(db.String(255), primary_key=True)
-    name = db.Column(db.String(255), unique=True, nullable=False)
-    is_diabled = db.Column(db.String(255), unique=False, nullable=False)
+
+class edicategory(db.Model):
+    edi_category_id = db.Column(db.String(255), primary_key=True)
+    name = db.Column(db.String(255))
     postedOn = db.Column(db.DateTime(), unique=False, nullable=False)
     updatedOn = db.Column(db.DateTime(), unique=False, nullable=False)
 
 
     def __init__(self,payload):
-        self.account_id = str(uuid.uuid4())
+        self.edi_category_id = str(uuid.uuid4())
         self.name = payload['name']
-        self.is_diabled = False
         self.postedOn = datetime.now()
         self.updatedOn = datetime.now()
 
     @property
     def serialize(self):
-       return {'_id': self.account_id,
-               'account_id': self.account_id,
-               'name': self.name,
-               'is_diabled': self.is_diabled
-
-              }
+       response_payload = {}
+       response_payload['edi_category_id'] = self.edi_category_id
+       response_payload['name'] = self.name
+       return response_payload

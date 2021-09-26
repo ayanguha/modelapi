@@ -1,6 +1,7 @@
 from flask import request,url_for,render_template,make_response,jsonify,redirect,url_for
 from flask_restplus import Resource,fields,reqparse
 from ..handlers.handlers import *
+from ..handlers.edicategory import *
 from ..define import api
 import uuid
 
