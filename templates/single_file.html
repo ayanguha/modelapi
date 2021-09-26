@@ -20,9 +20,7 @@
                            <button class="btn btn-link" data-toggle="collapse" data-target="#{{ record['name']}}" aria-expanded="true" aria-controls="collapseOne">
                              {{ record['description']}}
                            </button>
-                           {% if record['latest']['version']['number_of_errors'] > 0 %}
-                           <span class="badge badge-danger"> {{ record['latest']['version']['number_of_errors'] }}</span>
-                           {% endif %}
+                           
                          </h5>
                        </div>
 
@@ -89,7 +87,7 @@
                                                    {% if validation['succes']  %}
                                                    <td> <span class="pull-left badge badge-pill badge-success">Success</span> </td>
                                                    {% else %}
-                                                   <td> <span class="pull-left badge badge-pill badge-secondary">Show More</span>  </td>
+                                                   <td> <span class="pull-left badge badge-pill badge-danger">Resolve</span> <span class="pull-left badge badge-pill badge-secondary">Show More</span>  </td>
 
                                                    {% endif %}
                                                  </tr>

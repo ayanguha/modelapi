@@ -1,4 +1,9 @@
 import json, random, os
+file_part_1_choices = ['part_' + str(x) for x in range(10,19)]
+file_part_2_choices = ['part_' + str(x) for x in range(20,29)]
+file_part_3_choices = ['part_' + str(x) for x in range(30,39)]
+file_part_4_choices = ['part_' + str(x) for x in range(40,49)]
+file_period_choices = ['202006', '202007', '202007']
 
 
 def genData(n=400):
@@ -10,6 +15,13 @@ def genData(n=400):
         d = {}
         d['name'] = 'FN' + str(num)
         d['description'] = 'File name ' + str(num)
+        d['file_details'] = {}
+        d['file_details']['file_part_1'] = random.choice(file_part_1_choices)
+        d['file_details']['file_part_2'] = random.choice(file_part_2_choices)
+        d['file_details']['file_part_3'] = random.choice(file_part_3_choices)
+        d['file_details']['file_part_4'] = random.choice(file_part_4_choices)
+
+        d['file_details']['file_period'] = random.choice(file_period_choices)
         d['latest'] = {}
 
 

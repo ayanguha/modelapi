@@ -13,11 +13,19 @@
            data-search="true"
            data-pagination="true"
            data-page-size="50"
+           data-filter-control="true"
+           data-filter-control-visible="true"
            data-pagination-V-Align="top">
-          <thead>
+          <thead class="thead-dark">
             <tr>
-              <th data-field="description" data-sortable="true">Name</th>
-              <th>Latest Processed Version</th>
+              <th data-field="description" data-sortable="true">File Name</th>
+              <th data-field="file_part_1" data-filter-control="select">File Part 1</th>
+              <th data-field="file_part_2" data-filter-control="select">File Part 2</th>
+              <th data-field="file_part_3" data-filter-control="select">File Part 3</th>
+              <th data-field="file_part_4" data-filter-control="select">File Part 4</th>
+              <th data-field="file_period" data-filter-control="select">Period</th>
+
+              <th data-field="version" data-filter-control="select">Latest Processed Version</th>
               <th data-field="processed" data-sortable="true">Latest Processed Time</th>
               <th>Latest Status</th>
               <th>Show Details</th>
@@ -28,6 +36,12 @@
 
                    <tr>
                      <td> {{ record['description'] }} </td>
+                     <td> {{ record['file_details']['file_part_1']}} </td>
+                     <td> {{ record['file_details']['file_part_2']}} </td>
+                     <td> {{ record['file_details']['file_part_3']}} </td>
+                     <td> {{ record['file_details']['file_part_4']}} </td>
+                     <td> {{ record['file_details']['file_period']}} </td>
+
                      <td> {{ record['latest']['version']['version'] }} </td>
                      <td> {{ record['latest']['version']['processed'] }} </td>
 

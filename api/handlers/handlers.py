@@ -47,50 +47,6 @@ def getAllAccount():
 
 
 
-def readGlobalFileHistoryData():
-    SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
-    json_uri = os.path.join(SITE_ROOT, 'file_details.json')
-    with open(json_uri) as fo:
-        return json.load(fo)
-
-def getAllAlerts():
-    all = readGlobalFileHistoryData()
-    res = []
-    for x in all:
-        if x['latest']['version']['number_of_errors'] > 0:
-            d = {}
-            d['name'] = x['name']
-            d['description'] = x['description']
-            d['latest'] = x['latest']
-            res.append(d)
-    return res
-
-def getAllFiles():
-    all = readGlobalFileHistoryData()
-    return all
-
-def getSingleFile(file_name):
-    all = readGlobalFileHistoryData()
-    res = []
-    for x in all:
-        if x['name'] == file_name:
-            res.append(x)
-
-    return res
-
-def readGlobalEDICategoryData():
-    SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
-    json_uri = os.path.join(SITE_ROOT, 'edi_category.json')
-    with open(json_uri) as fo:
-        return json.load(fo)
-
-def writeGlobalEDICategoryData(d):
-    SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
-    json_uri = os.path.join(SITE_ROOT, 'edi_category.json')
-    with open(json_uri,'w') as fo:
-        return json.dump(d,fo, indent=4)
-
-
 def getSingleAccount(account_id):
     qryRes = Account\
                   .query\

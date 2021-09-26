@@ -72,3 +72,26 @@ class edicategory(db.Model):
        response_payload['edi_category_id'] = self.edi_category_id
        response_payload['name'] = self.name
        return response_payload
+
+class accrual_task_status_details(db.Model):
+    accrual_task_status_details_id = db.Column(db.String(255), primary_key=True)
+    status = db.Column(db.String(255))
+    include = db.Column(db.String(20))
+    postedOn = db.Column(db.DateTime(), unique=False, nullable=False)
+    updatedOn = db.Column(db.DateTime(), unique=False, nullable=False)
+
+
+    def __init__(self,payload):
+        self.accrual_task_status_details_id = str(uuid.uuid4())
+        self.status = payload['status']
+        self.include = payload['include']
+        self.postedOn = datetime.now()
+        self.updatedOn = datetime.now()
+
+    @property
+    def serialize(self):
+       response_payload = {}
+       response_payload['accrual_task_status_details_id'] = self.accrual_task_status_details_id
+       response_payload['status'] = self.status
+       response_payload['include'] = self.include
+       return response_payload

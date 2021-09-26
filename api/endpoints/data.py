@@ -2,6 +2,8 @@ from flask import request,url_for,render_template,make_response,jsonify,redirect
 from flask_restplus import Resource,fields,reqparse
 from ..handlers.handlers import *
 from ..handlers.edicategory import *
+from ..handlers.accrual_task_status_details import *
+from ..handlers.files import *
 from ..define import api
 import uuid
 
@@ -97,4 +99,33 @@ class SingleEDICategoryRequest(Resource):
 
     def delete(self, edi_category_id):
         response = deleteEdiCategory(edi_category_id)
+        return BasicResponse(response), 200
+
+###########################################################
+@ns.route('/dbm/accrual_task_status_details')
+class AccrualTaskStatusDetailsRequest(Resource):
+    @api.expect(BasicRecord)
+    def post(self):
+
+        response = addAccrualTaskStatusDetails(request.json['status'], request.json['include'])
+        return BasicResponse(response),201
+
+    def get(self):
+        response = getAllAccrualTaskStatusDetails()
+        return BasicResponse(response), 200
+
+@ns.route('/dbm/accrual_task_status_details/<string:accrual_task_status_details_id>')
+class SingleAccrualTaskStatusDetailsRequest(Resource):
+    def put(self, accrual_task_status_details_id):
+
+        response = updateAccrualTaskStatusDetails(accrual_task_status_details_id, request.json['status'], request.json['include'])
+        return BasicResponse(response),201
+
+    def get(self, accrual_task_status_details_id):
+        response = getAccrualTaskStatusDetails(accrual_task_status_details_id)
+        print(response)
+        return BasicResponse(response), 200
+
+    def delete(self, accrual_task_status_details_id):
+        response = deleteAccrualTaskStatusDetails(accrual_task_status_details_id)
         return BasicResponse(response), 200

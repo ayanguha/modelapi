@@ -1,0 +1,222 @@
+
+{% extends "base.html" %}
+{% block title %} EDI Category{% endblock %}
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+
+  <div id="AccrualTaskStatusDetailsTOP">
+      <div class="card">
+       <div class="card-header" id="headingOne">
+         <h5 class="mb-0">
+           <button class="btn btn-primary" data-toggle="collapse" data-target="#AccrualTaskStatusDetails" aria-expanded="true" aria-controls="collapseOne">
+             Add Accrual Task Status Details
+           </button>
+         </h5>
+       </div>
+
+
+         <div id="AccrualTaskStatusDetails" class="collapse" aria-labelledby="headingOne" data-parent="#AccrualTaskStatusDetailsTOP">
+           <form>
+             <div class="form-group">
+               <label for="type">Status</label><input type="text" class="form-control" id="AccrualTaskStatusDetailsStatus">
+
+               <label> Include?</label>
+                  <select class="form-control" name="option"  id="AccrualTaskStatusDetailsInclude">
+                         <option value="Yes" >Yes</option>
+                         <option value="No" >No</option>
+
+                  </select class="form-control">
+               </div>
+             <button type="button" class="btn btn-success" onclick="addAccrualTaskStatusDetails()">Submit</button>
+           </form>
+         </div>
+
+         <div class="container-fluid">
+            <table class="table table-hover table-striped" data-filter-control="select"
+                   data-toggle="table"
+                   data-search="true"
+                   data-pagination="true"
+                   data-page-size="50"
+                   data-pagination-V-Align="top">
+                  <thead>
+                    <tr>
+                      <th>  Status </th>
+                      <th>  Include </th>
+                      <th> Action </th>
+                    </tr>
+                  </thead>
+                 <tbody>
+                   {% for ec in lst %}
+                         <tr>
+                              <td > {{ ec['status']}} </td>
+                              <td > {{ ec['include']}} </td>
+                              <td >
+                                 <span class="fa fa-remove" onclick="deleteAccrualTaskStatusDetails('{{ ec['accrual_task_status_details_id']}}')"></span>
+                                 <span class="fa fa-pencil" onclick="setAndOpenAccrualTaskStatusDetailsModal('{{ ec['accrual_task_status_details_id']}}')"></span>
+                              </td>
+
+                         </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+         </div>
+
+       </div>
+      </div>
+    </div>
+
+
+    <div id="UpdateAccrualTaskStatusDetailsModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Update EDI Category</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+
+            </div>
+            <div class="modal-body">
+              <div class="form-group"  >
+                   <label for="UpdAccrualTaskStatusDetailsHiddenid">ID</label>
+                   <input class="form-control" type="hidden" id="UpdAccrualTaskStatusDetailsHiddenid" name="UpdAccrualTaskStatusDetailsHiddenid" placeholder="" type="text" readonly />
+                   <label for="UpdAccrualTaskStatusDetailsStatus">Status</label>
+                   <input class="form-control" id="UpdAccrualTaskStatusDetailsStatus" type="text" />
+                   
+                   <label> Include?</label>
+                      <select class="form-control" name="option"  id="UpdAccrualTaskStatusDetailsInclude">
+                             <option value="Yes" >Yes</option>
+                             <option value="No" >No</option>
+
+                      </select class="form-control">
+                 </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-success" onclick="updateAccrualTaskStatusDetails('{{ accrual_task_status_details_id }} ')">Save changes</button>
+          </div>
+          </div>
+
+        </div>
+      </div>
+
+<<script type="text/javascript">
+
+  function redirectHome() {
+
+      window.location = location.href;
+  }
+
+  function addAccrualTaskStatusDetails() {
+
+      var data = {
+          "status": $('#AccrualTaskStatusDetailsStatus').val(),
+          "include": $('#AccrualTaskStatusDetailsInclude').val(),
+
+      };
+
+
+
+      var formData = JSON.stringify(data);
+      $.ajax({
+          type: "POST",
+          cache: false,
+          data: formData,
+          contentType: 'application/json',
+          url: AccrualTaskStatusDetailsURL,
+          success: function(result) {
+              redirectHome();
+          },
+          error: function(xhr, status, error) {
+              alert(status);
+              alert(xhr.responseText);
+              redirectHome();
+          }
+      });
+  }
+
+
+  function setAndOpenAccrualTaskStatusDetailsModal(accrual_task_status_details_id) {
+      $('#UpdAccrualTaskStatusDetailsHiddenid').val(accrual_task_status_details_id);
+      var url = SingleAccrualTaskStatusDetailsURL.replace("accrual_task_status_details_id", accrual_task_status_details_id);
+      $.ajax({
+          type: "GET",
+          cache: false,
+          dataType: 'json',
+          contentType: 'application/json',
+          url: url,
+          success: function(results) {
+              var result = results.data[0];
+
+              $('#UpdAccrualTaskStatusDetailsStatus').val(result.status);
+              $('#UpdAccrualTaskStatusDetailsInclude').val(result.include);
+              $('#UpdateAccrualTaskStatusDetailsModal').modal('show');
+          },
+          error: function(xhr, status, error) {
+              alert(status);
+              alert(xhr.responseText);
+              redirectHome();
+          }
+      });
+  }
+
+  function updateAccrualTaskStatusDetails() {
+      var accrual_task_status_details_id = $('#UpdAccrualTaskStatusDetailsHiddenid').val();
+      var url = SingleAccrualTaskStatusDetailsURL.replace("accrual_task_status_details_id", accrual_task_status_details_id);
+      var data = {
+          "status": $('#UpdAccrualTaskStatusDetailsStatus').val(),
+          "include": $('#UpdAccrualTaskStatusDetailsInclude').val()
+
+      };
+
+      var formData = JSON.stringify(data);
+
+      $.ajax({
+          type: "PUT",
+          cache: false,
+          data: formData,
+          contentType: 'application/json',
+          url: url,
+          success: function(result) {
+              redirectHome();
+          },
+          error: function(xhr, status, error) {
+              alert(status);
+              alert(xhr.responseText);
+              redirectHome();
+          }
+      });
+  }
+
+  function deleteAccrualTaskStatusDetails(accrual_task_status_details_id) {
+      var data = {};
+
+      var url = SingleAccrualTaskStatusDetailsURL.replace("accrual_task_status_details_id", accrual_task_status_details_id);
+
+      var formData = JSON.stringify(data);
+      $.ajax({
+          type: "DELETE",
+          cache: false,
+          data: formData,
+          contentType: 'application/json',
+          url: url,
+          success: function(result) {
+              redirectHome();
+          },
+          error: function(xhr, status, error) {
+              alert(status);
+              alert(xhr.responseText);
+              redirectHome();
+          }
+      });
+  }
+
+
+</script>
+{% endblock %}

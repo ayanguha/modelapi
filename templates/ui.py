@@ -3,8 +3,6 @@ from flask_restplus import  Resource, reqparse
 
 from ..handlers.handlers import *
 from ..handlers.edicategory import *
-from ..handlers.accrual_task_status_details import *
-from ..handlers.files import *
 
 
 ############################################################################################
@@ -67,6 +65,7 @@ class SingleFileUIHandler(Resource):
     def get(self):
         headers = {'Content-Type': 'text/html'}
         afs = getSingleFile(request.args.get('file_name'))
+        print(afs)
         return make_response(
                 render_template('single_file.html',uiconfig=getUIConfig(),
                              lst=afs ), 200,headers)

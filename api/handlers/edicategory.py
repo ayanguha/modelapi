@@ -9,9 +9,7 @@ from .util import *
 
 
 def getAllEdiCategory():
-    qryRes = edicategory\
-                  .query\
-                  .all()
+    qryRes = edicategory.query.all()
     return [i.serialize for i in qryRes]
 
 def addEdiCategory(name):

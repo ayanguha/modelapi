@@ -15,9 +15,13 @@ pageUIMapping = [ [UIHandler,"/"],
                   [UIHandler,"/ui/"],
                   [SampleUIHandler,"/ui/sample"],
                   [AlertsUIHandler, "/ui/alerts"],
-                  [EdicategoryUIHandler, "/ui/edicategory"],
+
                   [FileHistoryUIHandler, "/ui/file_history"],
-                  [SingleFileUIHandler, "/ui/single_file"]
+                  [SingleFileUIHandler, "/ui/single_file"],
+
+                  [EdicategoryUIHandler, "/ui/edicategory"],
+                  [AccrualTaskStatusDetailsUIHandler, "/ui/accrual_task_status_details"],
+
                  ]
 
 def configure_app(flask_app):
