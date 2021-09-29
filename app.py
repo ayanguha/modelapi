@@ -20,6 +20,9 @@ pageUIMapping = [ [UIHandler,"/"],
                   [SingleFileUIHandler, "/ui/single_file"],
 
                   [EdicategoryUIHandler, "/ui/edicategory"],
+                  [EdifileUIHandler, "/ui/edifile"],
+                  [SupplierUIHandler, "/ui/supplier"],
+                  [GlAccountUIHandler, "/ui/glaccount"],
                   [AccrualTaskStatusDetailsUIHandler, "/ui/accrual_task_status_details"],
 
                  ]

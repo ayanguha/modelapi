@@ -49,9 +49,17 @@ var SampleURL =  "{{ url_for('api.v1_account_record_request') }}";
 var EDICategoryURL =  "{{ url_for('api.v1_edi_category_request') }}";
 var SingleEDICategoryURL =  "{{ url_for('api.v1_single_edi_category_request', edi_category_id='edi_category_id') }}";
 
+var EDIFileURL =  "{{ url_for('api.v1_edi_file_request') }}";
+var SingleEDIFileURL =  "{{ url_for('api.v1_single_edi_file_request', edifile_id='edifile_id') }}";
+
 var AccrualTaskStatusDetailsURL =  "{{ url_for('api.v1_accrual_task_status_details_request') }}";
 var SingleAccrualTaskStatusDetailsURL =  "{{ url_for('api.v1_single_accrual_task_status_details_request', accrual_task_status_details_id='accrual_task_status_details_id') }}";
 
+var SupplierURL =  "{{ url_for('api.v1_supplier_request') }}";
+var SingleSupplierURL =  "{{ url_for('api.v1_single_supplier_request', supplier_id='supplier_id') }}";
+
+var GLAccountURL =  "{{ url_for('api.v1_gl_account_request') }}";
+var SingleGLAccountURL =  "{{ url_for('api.v1_single_gl_account_request', glaccount_id='glaccount_id') }}";
 
 </script>
 
@@ -198,14 +206,12 @@ footer  {
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="{{ url_for('api.accrual_task_status_details_ui_handler')}}">Accrual_Task_Detail_Status</a>
-          <a class="dropdown-item" href="#">EDI_Suppliers</a>
-          <a class="dropdown-item" href="#">GLCodes</a>
+          <a class="dropdown-item" href="{{ url_for('api.supplier_ui_handler')}}">Suppliers</a>
+          <a class="dropdown-item" href="{{ url_for('api.gl_account_ui_handler')}}">GL Accounts</a>
               <div class="dropdown-divider">EDI</div>
           <a class="dropdown-item" href="{{ url_for('api.edicategory_ui_handler')}}">EDI Category</a>
-          <a class="dropdown-item" href="#">EDI File ID</a>
-          <a class="dropdown-item" href="#">EDI_Period</a>
-          <a class="dropdown-item" href="#">EDI_PostType</a>
-              <div class="dropdown-divider">Site</div>
+          <a class="dropdown-item" href="{{ url_for('api.edifile_ui_handler')}}">EDI File</a>
+                <div class="dropdown-divider">Site</div>
           <a class="dropdown-item" href="#">Site Channel_Profit Center</a>
           <a class="dropdown-item" href="#">Sites</a>
           <a class="dropdown-item" href="#">Sites Closed</a>

@@ -1,6 +1,6 @@
 
 {% extends "base.html" %}
-{% block title %} EDI Category{% endblock %}
+{% block title %} Supplier {% endblock %}
 
 
 {% block content %}
@@ -8,24 +8,30 @@
 
 <div class="container-fluid">
 
-  <div id="EDICategoryTOP">
+  <div id="SupplierTOP">
       <div class="card">
        <div class="card-header" id="headingOne">
          <h5 class="mb-0">
-           <button class="btn btn-primary" data-toggle="collapse" data-target="#EDICategory" aria-expanded="true" aria-controls="collapseOne">
-             Add EDI Category
+           <button class="btn btn-primary" data-toggle="collapse" data-target="#Supplier" aria-expanded="true" aria-controls="collapseOne">
+             Add Supplier
            </button>
          </h5>
        </div>
 
 
-         <div id="EDICategory" class="collapse" aria-labelledby="headingOne" data-parent="#EDICategoryTOP">
+         <div id="Supplier" class="collapse" aria-labelledby="headingOne" data-parent="#SupplierTOP">
            <form>
              <div class="form-group">
-               <label for="type">Name:</label><input type="text" class="form-control" id="EDICategoryName">
+               <label for="type">Name:</label><input type="text" class="form-control" id="SupplierName">
+               <label for="type">Code:</label><input type="text" class="form-control" id="SupplierCode">
+               <label> Is Active?</label>
+                  <select class="form-control" name="option"  id="SupplierIsActive">
+                         <option value="Yes" >Yes</option>
+                         <option value="No" >No</option>
 
+                  </select class="form-control">
                </div>
-             <button type="button" class="btn btn-success" onclick="addEdiCategory()">Submit</button>
+             <button type="button" class="btn btn-success" onclick="addSupplier()">Submit</button>
            </form>
          </div>
 
@@ -39,6 +45,8 @@
                   <thead>
                     <tr>
                       <th>  Name </th>
+                      <th>  Code </th>
+                      <th>  Is Active </th>
                       <th> Action </th>
                     </tr>
                   </thead>
@@ -46,9 +54,11 @@
                    {% for ec in lst %}
                          <tr>
                               <td > {{ ec['name']}} </td>
+                              <td > {{ ec['code']}} </td>
+                              <td > {{ ec['is_active']}} </td>
                               <td >
-                                 <span class="fa fa-remove" onclick="deleteEDICategory('{{ ec['edi_category_id']}}')"></span>
-                                 <span class="fa fa-pencil" onclick="setAndOpenEDICategoryModal('{{ ec['edi_category_id']}}')"></span>
+                                 <span class="fa fa-remove" onclick="deleteSupplier('{{ ec['supplier_id']}}')"></span>
+                                 <span class="fa fa-pencil" onclick="setAndOpenSupplierModal('{{ ec['supplier_id']}}')"></span>
                               </td>
 
                          </tr>
@@ -62,13 +72,13 @@
     </div>
 
 
-    <div id="UpdateEDICategoryModal" class="modal fade" role="dialog">
+    <div id="UpdateSupplierModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
 
           <!-- Modal content-->
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Update EDI Category</h4>
+              <h4 class="modal-title">Update Supplier</h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -76,15 +86,21 @@
             </div>
             <div class="modal-body">
               <div class="form-group"  >
-                   <label for="UpdEDICategoryHiddenid">ID</label>
-                   <input class="form-control" type="hidden" id="UpdEDICategoryHiddenid" name="UpdEDICategoryHiddenid" placeholder="" type="text" readonly />
-                   <label for="UpdEDICategoryName">Name</label>
-                   <input class="form-control" id="UpdEDICategoryName"  type="text" />
+                   <label for="UpdESupplierHiddenid">ID</label>
+                   <input class="form-control" type="hidden" id="UpdESupplierHiddenid"  readonly />
+                   <label for="UpdSupplierName">Name</label><input class="form-control" id="UpdSupplierName" type="text" />
+                   <label for="UpdSupplierName">Code</label><input class="form-control" id="UpdSupplierCode" type="text" />
+                   <label> Is Active</label>
+                      <select class="form-control" name="option"  id="UpdSupplierIsActive">
+                             <option value="Yes" >Yes</option>
+                             <option value="No" >No</option>
+
+                      </select class="form-control">
                  </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-success" onclick="updateEDICategory('{{ edi_category_id }} ')">Save changes</button>
+              <button type="button" class="btn btn-success" onclick="updateSupplier('{{ edi_category_id }} ')">Save changes</button>
           </div>
           </div>
 
@@ -98,11 +114,12 @@
       window.location = location.href;
   }
 
-  function addEdiCategory() {
+  function addSupplier() {
 
       var data = {
-          "name": $('#EDICategoryName').val(),
-
+          "name": $('#SupplierName').val(),
+          "code": $('#SupplierCode').val(),
+          "is_active": $('#SupplierIsActive').val(),
       };
 
 
@@ -113,7 +130,7 @@
           cache: false,
           data: formData,
           contentType: 'application/json',
-          url: EDICategoryURL,
+          url: SupplierURL,
           success: function(result) {
               redirectHome();
           },
@@ -126,9 +143,9 @@
   }
 
 
-  function setAndOpenEDICategoryModal(edi_category_id) {
-      $('#UpdEDICategoryHiddenid').val(edi_category_id);
-      var url = SingleEDICategoryURL.replace("edi_category_id", edi_category_id);
+  function setAndOpenSupplierModal(supplier_id) {
+      $('#UpdESupplierHiddenid').val(supplier_id);
+      var url = SingleSupplierURL.replace("supplier_id", supplier_id);
       $.ajax({
           type: "GET",
           cache: false,
@@ -138,8 +155,10 @@
           success: function(results) {
               var result = results.data[0];
 
-              $('#UpdEDICategoryName').val(result.name);
-              $('#UpdateEDICategoryModal').modal('show');
+              $('#UpdSupplierName').val(result.name);
+              $('#UpdSupplierCode').val(result.code);
+              $('#UpdSupplierIsActive').val(result.is_active);
+              $('#UpdateSupplierModal').modal('show');
           },
           error: function(xhr, status, error) {
               alert(status);
@@ -149,12 +168,13 @@
       });
   }
 
-  function updateEDICategory() {
-      var edi_category_id = $('#UpdEDICategoryHiddenid').val();
-      var url = SingleEDICategoryURL.replace("edi_category_id", edi_category_id);
+  function updateSupplier() {
+      var supplier_id = $('#UpdESupplierHiddenid').val();
+      var url = SingleSupplierURL.replace("supplier_id", supplier_id);
       var data = {
-          "name": $('#UpdEDICategoryName').val(),
-
+          "name": $('#UpdSupplierName').val(),
+          "code": $('#UpdSupplierCode').val(),
+          "is_active": $('#UpdSupplierIsActive').val(),
       };
 
       var formData = JSON.stringify(data);
@@ -176,10 +196,10 @@
       });
   }
 
-  function deleteEDICategory(edi_category_id) {
+  function deleteSupplier(supplier_id) {
       var data = {};
 
-      var url = SingleEDICategoryURL.replace("edi_category_id", edi_category_id);
+      var url = SingleSupplierURL.replace("supplier_id", supplier_id);
 
       var formData = JSON.stringify(data);
       $.ajax({

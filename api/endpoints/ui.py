@@ -3,7 +3,10 @@ from flask_restplus import  Resource, reqparse
 
 from ..handlers.handlers import *
 from ..handlers.edicategory import *
+from ..handlers.edifile import *
 from ..handlers.accrual_task_status_details import *
+from ..handlers.supplier import *
+from ..handlers.glaccount import *
 from ..handlers.files import *
 
 
@@ -82,6 +85,44 @@ class EdicategoryUIHandler(Resource):
         print(afs)
         return make_response(
                 render_template('edi_category.html',uiconfig=getUIConfig(),
+                             lst=afs ), 200,headers)
+############################################################################################
+############################################################################################
+
+class EdifileUIHandler(Resource):
+
+    def get(self):
+        headers = {'Content-Type': 'text/html'}
+        afs = getAlledifile()
+        print(afs)
+        return make_response(
+                render_template('edi_file.html',uiconfig=getUIConfig(),
+                             lst=afs ), 200,headers)
+############################################################################################
+
+############################################################################################
+
+class SupplierUIHandler(Resource):
+
+    def get(self):
+        headers = {'Content-Type': 'text/html'}
+        afs = getAllSupplier()
+        print(afs)
+        return make_response(
+                render_template('supplier.html',uiconfig=getUIConfig(),
+                             lst=afs ), 200,headers)
+############################################################################################
+
+############################################################################################
+
+class GlAccountUIHandler(Resource):
+
+    def get(self):
+        headers = {'Content-Type': 'text/html'}
+        afs = getAllGlaccount()
+        print(afs)
+        return make_response(
+                render_template('glaccount.html',uiconfig=getUIConfig(),
                              lst=afs ), 200,headers)
 ############################################################################################
 

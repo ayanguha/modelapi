@@ -1,0 +1,254 @@
+
+{% extends "base.html" %}
+{% block title %} GL Account {% endblock %}
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+
+  <div id="GLAccountTOP">
+      <div class="card">
+       <div class="card-header" id="headingOne">
+         <h5 class="mb-0">
+           <button class="btn btn-primary" data-toggle="collapse" data-target="#GLAccount" aria-expanded="true" aria-controls="collapseOne">
+             Add GL Account
+           </button>
+         </h5>
+       </div>
+
+
+         <div id="GLAccount" class="collapse" aria-labelledby="headingOne" data-parent="#GLAccountTOP">
+           <form>
+             <div class="form-group">
+               <label for="type">Code</label><input type="text" class="form-control" id="GLAccountCode">
+               <label for="type">Description</label><input type="text" class="form-control" id="GLAccountDescription">
+
+               <label> Financial Type </label>
+                  <select class="form-control" name="option"  id="GLAccountFinancialType">
+                         <option value="Opex" >Opex</option>
+                         <option value="Capex" >Capex</option>
+                         <option value="Revex" >Revex</option>
+
+                  </select class="form-control">
+
+
+                  <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="GLAccountIsActive">
+                      <label class="form-check-label" for="gridCheck">
+                        Is Active?
+                      </label>
+                    </div>
+
+               </div>
+             <button type="button" class="btn btn-success" onclick="addGLAccount()">Submit</button>
+           </form>
+         </div>
+
+         <div class="container-fluid">
+            <table class="table table-hover table-striped" data-filter-control="select"
+                   data-toggle="table"
+                   data-search="true"
+                   data-pagination="true"
+                   data-page-size="50"
+                   data-pagination-V-Align="top">
+                  <thead>
+                    <tr>
+                      <th>  Code </th>
+                      <th>  Description </th>
+                      <th>  Financial Type </th>
+                      <th>  Is Active </th>
+                      <th> Action </th>
+                    </tr>
+                  </thead>
+                 <tbody>
+                   {% for ec in lst %}
+                         <tr>
+
+                              <td > {{ ec['code']}} </td>
+                              <td > {{ ec['description']}} </td>
+                              <td > {{ ec['financial_type']}} </td>
+                              <td > {{ ec['is_active']}} </td>
+                              <td >
+                                 <span class="fa fa-remove" onclick="deleteGLAccount('{{ ec['glaccount_id']}}')"></span>
+                                 <span class="fa fa-pencil" onclick="setAndOpenGLAccountModal('{{ ec['glaccount_id']}}')"></span>
+                              </td>
+
+                         </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+         </div>
+
+       </div>
+      </div>
+    </div>
+
+
+    <div id="UpdateGLAccountModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Update GL Account</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+
+            </div>
+            <div class="modal-body">
+              <div class="form-group"  >
+                   <label for="UpdGLAccountHiddenid">ID</label> <input class="form-control" type="hidden" id="UpdGLAccountHiddenid"  readonly />
+                   <label for="UpdGLAccountCode">Code</label><input class="form-control" id="UpdGLAccountCode" type="text" />
+                   <label for="UpdGLAccountDescription">Description</label><input class="form-control" id="UpdGLAccountDescription" type="text" />
+
+                   <label> Financial Type </label>
+                      <select class="form-control" name="option"  id="UpdGLAccountFinancialType">
+                             <option value="Opex" >Opex</option>
+                             <option value="Capex" >Capex</option>
+                             <option value="Revex" >Revex</option>
+
+                      </select class="form-control">
+
+                      <div class="form-group">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="UpdGLAccountIsActive">
+                          <label class="form-check-label" for="gridCheck">
+                            Is Active?
+                          </label>
+                        </div>
+                      </div>
+                 </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-success" onclick="updateGLAccount('{{ edi_category_id }} ')">Save changes</button>
+          </div>
+          </div>
+
+        </div>
+      </div>
+
+<script type="text/javascript">
+
+  function redirectHome() {
+
+      window.location = location.href;
+  }
+
+  function addGLAccount() {
+
+      var data = {
+
+          "code": $('#GLAccountCode').val(),
+          "description": $('#GLAccountDescription').val(),
+          "financial_type": $('#GLAccountFinancialType').val(),
+          "is_active": $('#GLAccountIsActive').prop('checked'),
+      };
+
+
+
+      var formData = JSON.stringify(data);
+      $.ajax({
+          type: "POST",
+          cache: false,
+          data: formData,
+          contentType: 'application/json',
+          url: GLAccountURL,
+          success: function(result) {
+              redirectHome();
+          },
+          error: function(xhr, status, error) {
+              alert(status);
+              alert(xhr.responseText);
+              redirectHome();
+          }
+      });
+  }
+
+
+  function setAndOpenGLAccountModal(glaccount_id) {
+      $('#UpdGLAccountHiddenid').val(glaccount_id);
+      var url = SingleGLAccountURL.replace("glaccount_id", glaccount_id);
+      $.ajax({
+          type: "GET",
+          cache: false,
+          dataType: 'json',
+          contentType: 'application/json',
+          url: url,
+          success: function(results) {
+              var result = results.data[0];
+
+              $('#UpdGLAccountCode').val(result.code);
+              $('#UpdGLAccountDescription').val(result.description);
+              $('#UpdGLAccountFinancialType').val(result.financial_type);
+              $('#UpdGLAccountIsActive').val(result.is_active);
+              document.getElementById("UpdGLAccountIsActive").checked = result.is_active;
+              $('#UpdateGLAccountModal').modal('show');
+          },
+          error: function(xhr, status, error) {
+              alert(status);
+              alert(xhr.responseText);
+              redirectHome();
+          }
+      });
+  }
+
+  function updateGLAccount() {
+      var glaccount_id = $('#UpdGLAccountHiddenid').val();
+      var url = SingleGLAccountURL.replace("glaccount_id", glaccount_id);
+      var data = {
+
+          "code": $('#UpdGLAccountCode').val(),
+          "description": $('#UpdGLAccountDescription').val(),
+          "financial_type": $('#UpdGLAccountFinancialType').val(),
+          "is_active": document.getElementById("UpdGLAccountIsActive").checked,
+      };
+
+      var formData = JSON.stringify(data);
+
+      $.ajax({
+          type: "PUT",
+          cache: false,
+          data: formData,
+          contentType: 'application/json',
+          url: url,
+          success: function(result) {
+              redirectHome();
+          },
+          error: function(xhr, status, error) {
+              alert(status);
+              alert(xhr.responseText);
+              redirectHome();
+          }
+      });
+  }
+
+  function deleteGLAccount(glaccount_id) {
+      var data = {};
+
+      var url = SingleGLAccountURL.replace("glaccount_id", glaccount_id);
+
+      var formData = JSON.stringify(data);
+      $.ajax({
+          type: "DELETE",
+          cache: false,
+          data: formData,
+          contentType: 'application/json',
+          url: url,
+          success: function(result) {
+              redirectHome();
+          },
+          error: function(xhr, status, error) {
+              alert(status);
+              alert(xhr.responseText);
+              redirectHome();
+          }
+      });
+  }
+
+
+</script>
+{% endblock %}

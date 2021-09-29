@@ -1,6 +1,6 @@
 
 {% extends "base.html" %}
-{% block title %}Single Artefact{% endblock %}
+{% block title %}EDI File{% endblock %}
 
 
 {% block content %}
@@ -8,24 +8,24 @@
 
 <div class="container-fluid">
 
-  <div id="EDIFileIDTOP">
+  <div id="EDIFileTOP">
       <div class="card">
        <div class="card-header" id="headingOne">
          <h5 class="mb-0">
-           <button class="btn btn-primary" data-toggle="collapse" data-target="#EDIFileID" aria-expanded="true" aria-controls="collapseOne">
-             Add EDI Category
+           <button class="btn btn-primary" data-toggle="collapse" data-target="#EDIFile" aria-expanded="true" aria-controls="collapseOne">
+             Add EDI File
            </button>
          </h5>
        </div>
 
 
-         <div id="EDIFileID" class="collapse" aria-labelledby="headingOne" data-parent="#EDIFileIDTOP">
+         <div id="EDIFile" class="collapse" aria-labelledby="headingOne" data-parent="#EDIFileTOP">
            <form>
              <div class="form-group">
-               <label for="type">Name:</label><input type="text" class="form-control" id="EDIFileIDName">
+               <label for="type">Name:</label><input type="text" class="form-control" id="EDIFileName">
 
                </div>
-             <button type="button" class="btn btn-success" onclick="#">Submit</button>
+             <button type="button" class="btn btn-success" onclick="addEdiFile()">Submit</button>
            </form>
          </div>
 
@@ -42,15 +42,16 @@
                     </tr>
                   </thead>
                  <tbody>
-                         <tr>
-                              <td > HO </td>
+                    {% for ec in lst %}
+                        <tr>
+                              <td > {{ ec['name']}} </td>
                               <td >
-                                 <span class="fa fa-remove" onclick="#"></span>
-                                 <span class="fa fa-pencil" onclick="#"></span>
-                              </td>
+                                <span class="fa fa-remove" onclick="deleteEDIFile('{{ ec['edifile_id']}}')"></span>
+                                <span class="fa fa-pencil" onclick="setAndOpenEDIFileModal('{{ ec['edifile_id']}}')"></span>
+                             </td>
 
                          </tr>
-
+                      {% endfor %}
                   </tbody>
                 </table>
          </div>
@@ -59,4 +60,145 @@
       </div>
     </div>
 
+
+
+    <div id="UpdateEDIFileModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Update EDI Category</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+
+            </div>
+            <div class="modal-body">
+              <div class="form-group"  >
+                   <label for="UpdEDIFileHiddenid">ID</label>
+                   <input class="form-control" type="hidden" id="UpdEDIFileHiddenid" name="UpdEDIFileHiddenid" placeholder="" type="text" readonly />
+                   <label for="UpdEDIFileName">Name</label>
+                   <input class="form-control" id="UpdEDIFileName"   type="text" />
+                 </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-success" onclick="updateEDIFile('{{ edifile_id }} ')">Save changes</button>
+          </div>
+          </div>
+
+        </div>
+      </div>
+
+  <script type="text/javascript">
+
+        function redirectHome() {
+
+            window.location = location.href;
+        }
+
+        function addEdiFile() {
+
+            var data = {
+                "name": $('#EDIFileName').val(),
+
+            };
+
+
+
+            var formData = JSON.stringify(data);
+            $.ajax({
+                type: "POST",
+                cache: false,
+                data: formData,
+                contentType: 'application/json',
+                url: EDIFileURL,
+                success: function(result) {
+                    redirectHome();
+                },
+                error: function(xhr, status, error) {
+                    alert(status);
+                    alert(xhr.responseText);
+                    redirectHome();
+                }
+            });
+        }
+
+
+        function setAndOpenEDIFileModal(edifile_id) {
+            $('#UpdEDIFileHiddenid').val(edifile_id);
+            var url = SingleEDIFileURL.replace("edifile_id", edifile_id);
+            $.ajax({
+                type: "GET",
+                cache: false,
+                dataType: 'json',
+                contentType: 'application/json',
+                url: url,
+                success: function(results) {
+                    var result = results.data[0];
+
+                    $('#UpdEDIFileName').val(result.name);
+                    $('#UpdateEDIFileModal').modal('show');
+                },
+                error: function(xhr, status, error) {
+                    alert(status);
+                    alert(xhr.responseText);
+                    redirectHome();
+                }
+            });
+        }
+
+        function updateEDIFile() {
+            var edifile_id = $('#UpdEDIFileHiddenid').val();
+            var url = SingleEDIFileURL.replace("edifile_id", edifile_id);
+            var data = {
+                "name": $('#UpdEDIFileName').val(),
+
+            };
+
+            var formData = JSON.stringify(data);
+
+            $.ajax({
+                type: "PUT",
+                cache: false,
+                data: formData,
+                contentType: 'application/json',
+                url: url,
+                success: function(result) {
+                    redirectHome();
+                },
+                error: function(xhr, status, error) {
+                    alert(status);
+                    alert(xhr.responseText);
+                    redirectHome();
+                }
+            });
+        }
+
+        function deleteEDIFile(edifile_id) {
+            var data = {};
+
+            var url = SingleEDIFileURL.replace("edifile_id", edifile_id);
+
+            var formData = JSON.stringify(data);
+            $.ajax({
+                type: "DELETE",
+                cache: false,
+                data: formData,
+                contentType: 'application/json',
+                url: url,
+                success: function(result) {
+                    redirectHome();
+                },
+                error: function(xhr, status, error) {
+                    alert(status);
+                    alert(xhr.responseText);
+                    redirectHome();
+                }
+            });
+        }
+
+
+      </script>
 {% endblock %}
