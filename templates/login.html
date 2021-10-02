@@ -46,21 +46,6 @@
 <script type="text/javascript">
 var SampleURL =  "{{ url_for('api.v1_account_record_request') }}";
 
-var EDICategoryURL =  "{{ url_for('api.v1_edi_category_request') }}";
-var SingleEDICategoryURL =  "{{ url_for('api.v1_single_edi_category_request', edi_category_id='edi_category_id') }}";
-
-var EDIFileURL =  "{{ url_for('api.v1_edi_file_request') }}";
-var SingleEDIFileURL =  "{{ url_for('api.v1_single_edi_file_request', edifile_id='edifile_id') }}";
-
-var AccrualTaskStatusDetailsURL =  "{{ url_for('api.v1_accrual_task_status_details_request') }}";
-var SingleAccrualTaskStatusDetailsURL =  "{{ url_for('api.v1_single_accrual_task_status_details_request', accrual_task_status_details_id='accrual_task_status_details_id') }}";
-
-var SupplierURL =  "{{ url_for('api.v1_supplier_request') }}";
-var SingleSupplierURL =  "{{ url_for('api.v1_single_supplier_request', supplier_id='supplier_id') }}";
-
-var GLAccountURL =  "{{ url_for('api.v1_gl_account_request') }}";
-var SingleGLAccountURL =  "{{ url_for('api.v1_single_gl_account_request', glaccount_id='glaccount_id') }}";
-
 </script>
 
 <style>
@@ -76,7 +61,7 @@ textarea{
 
 
 .jumbotron {
-  background-color: {{ uiconfig['backgrouound_color'] }};
+  background-color: #f6f6f6;
   color: #fff;
   padding: 100px 25px;
   font-family: Montserrat, sans-serif;
@@ -98,7 +83,7 @@ textarea{
   font-style: normal;
 }
 .panel {
-  border: 1px solid {{ uiconfig['backgrouound_color'] }};
+  border: 1px solid #f6f6f6;
   border-radius:0 !important;
   transition: box-shadow 0.5s;
 }
@@ -106,13 +91,13 @@ textarea{
   box-shadow: 5px 0px 40px rgba(0,0,0, .2);
 }
 .panel-footer .btn:hover {
-  border: 1px solid {{ uiconfig['backgrouound_color'] }};
+  border: 1px solid #f6f6f6;
   background-color: #fff !important;
-  color: {{ uiconfig['backgrouound_color'] }};
+  color: #f6f6f6;
 }
 .panel-heading {
   color: #fff !important;
-  background-color: {{ uiconfig['backgrouound_color'] }} !important;
+  background-color: #f6f6f6 !important;
   padding: 25px;
   border-bottom: 1px solid transparent;
   border-top-left-radius: 0px;
@@ -132,12 +117,12 @@ textarea{
 }
 .panel-footer .btn {
   margin: 15px 0;
-  background-color: {{ uiconfig['backgrouound_color'] }};
+  background-color: #f6f6f6;
   color: #fff;
 }
 .navbar {
   margin-bottom: 0;
-  background-color: {{ uiconfig['backgrouound_color'] }};
+  background-color: #f6f6f6;
   z-index: 1000;
   border: 0;
   font-size: 14px !important;
@@ -148,7 +133,7 @@ textarea{
 }
 
 .dropdown-menu  {
-    background-color: {{ uiconfig['backgrouound_color'] }};
+    background-color: #f6f6f6;
     color: #fff;
     font-size: 14px !important;
     line-height: 1.42857143 !important;
@@ -160,7 +145,7 @@ textarea{
   color: #fff !important;
 }
 .navbar-nav li a:hover, .navbar-nav li.active a {
-  color: {{ uiconfig['backgrouound_color'] }} !important;
+  color: #f6f6f6 !important;
   background-color: #fff !important;
 }
 .navbar-default .navbar-toggle {
@@ -170,7 +155,7 @@ textarea{
 footer  {
   font-size: 20px;
   margin-bottom: 20px;
-  color: {{ uiconfig['backgrouound_color'] }};
+  color: #f6f6f6;
 }
 
 </style>
@@ -178,66 +163,28 @@ footer  {
 
   <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
-  <a class="navbar-brand" href="#">BPNZ EDI Management</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav">
-        <li class="nav-item ">
-          <a class="nav-link" href="{{ url_for('api.ui_handler')}}">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('api.alerts_ui_handler')}}">Alerts</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Journals</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Accruals</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('api.file_history_ui_handler')}}">File history</a>
-        </li>
-        <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Data Management
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="{{ url_for('api.accrual_task_status_details_ui_handler')}}">Accrual_Task_Detail_Status</a>
-          <a class="dropdown-item" href="{{ url_for('api.supplier_ui_handler')}}">Suppliers</a>
-          <a class="dropdown-item" href="{{ url_for('api.gl_account_ui_handler')}}">GL Accounts</a>
-              <div class="dropdown-divider">EDI</div>
-          <a class="dropdown-item" href="{{ url_for('api.edicategory_ui_handler')}}">EDI Category</a>
-          <a class="dropdown-item" href="{{ url_for('api.edifile_ui_handler')}}">EDI File</a>
-                <div class="dropdown-divider">Site</div>
-          <a class="dropdown-item" href="#">Site Channel_Profit Center</a>
-          <a class="dropdown-item" href="#">Sites</a>
-          <a class="dropdown-item" href="#">Sites Closed</a>
-          <a class="dropdown-item" href="#">Sites Short Name</a>
-              <div class="dropdown-divider">Contract</div>
-          <a class="dropdown-item" href="#">UnitRates</a>
-          <a class="dropdown-item" href="#">FPMstr</a>
-        </div>
-      </li>
-
-      </ul>
-
-      <form class="form-inline my-2 my-lg-0" action="{{ url_for('api.v1_logout_request') }}" method="post">
-         <button class="btn btn-primary my-2 my-sm-0" type="submit" >Logout</button>
-      </form>
-    </div>
-</nav>
 
 
 
 
 
 <div class="container-fluid width:1170px">
- <div id="content">{% block content %}{% endblock %}</div>
 
 
+
+  <form action="{{ url_for('api.v1_login_request') }}" method="post">
+   <div class="form-group">
+     <label for="InputEmail">Email address</label>
+     <input type="email" class="form-control" id="InputEmail" name="InputEmail" aria-describedby="emailHelp" placeholder="Enter email">
+     <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+   </div>
+   <div class="form-group">
+     <label for="InputPassword">Password</label>
+     <input type="password" class="form-control" id="InputPassword" name="InputPassword" placeholder="Password">
+   </div>
+
+   <button type="submit" class="btn btn-primary">Submit</button>
+ </form>
 
   </div> <!-- /container -->
 

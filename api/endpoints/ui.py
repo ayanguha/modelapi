@@ -1,5 +1,7 @@
 from flask import request,render_template,make_response,jsonify,redirect,url_for
 from flask_restplus import  Resource, reqparse
+from flask_login import login_user, logout_user, login_required
+
 
 from ..handlers.handlers import *
 from ..handlers.edicategory import *
@@ -17,10 +19,17 @@ def getUIConfig():
     uiconfig['localenv'] = 'dev'
 
     return uiconfig
+############################################################################################
+class LoginUIHandler(Resource):
+
+    def get(self):
+        headers = {'Content-Type': 'text/html'}
+        return make_response(
+                render_template('login.html' ), 200,headers)
+
 
 ############################################################################################
 class UIHandler(Resource):
-
     def get(self):
         headers = {'Content-Type': 'text/html'}
         return make_response(
@@ -42,7 +51,7 @@ class SampleUIHandler(Resource):
 ############################################################################################
 
 class AlertsUIHandler(Resource):
-
+    @login_required
     def get(self):
         headers = {'Content-Type': 'text/html'}
         aaa = getAllAlerts()

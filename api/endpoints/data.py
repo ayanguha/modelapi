@@ -1,4 +1,4 @@
-from flask import request,url_for,render_template,make_response,jsonify,redirect,url_for
+from flask import request,url_for,render_template,make_response,jsonify,redirect,url_for,flash
 from flask_restplus import Resource,fields,reqparse
 from ..handlers.handlers import *
 from ..handlers.edicategory import *
@@ -8,8 +8,12 @@ from ..handlers.supplier import *
 from ..handlers.glaccount import *
 from ..handlers.files import *
 from ..handlers.transactions import *
+from ..handlers.auth import *
 from ..define import api
 import uuid
+
+from flask_login import login_user, logout_user, login_required
+
 
 ns = api.namespace('v1')
 
@@ -122,6 +126,25 @@ class TransactionsRecordRequest(Resource):
         resp = addTransactionDetailMany(request.json['details'])
         return BasicResponse(resp),201
 
+###########################################################
+@ns.route('/auth/login')
+class LoginRequest(Resource):
+    def post(self):
+        next = request.args.get('next')
+        user = login_user_backend(request.form['InputEmail'],request.form['InputPassword'])
+        if not user:
+            return redirect(url_for('api.login_ui_handler'))
+        login_user(user)
+        flash('Logged in successfully.')
+        return redirect(next or url_for('api.ui_handler'))
+    
+
+@ns.route('/logout')
+class LogoutRequest(Resource):
+    @login_required
+    def post(self):
+        logout_user()
+        return redirect(url_for('api.login_ui_handler'))
 
 
 ###########################################################

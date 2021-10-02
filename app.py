@@ -1,18 +1,22 @@
 
-from flask import Flask,request,Response,jsonify,Blueprint
+from flask import Flask,request,Response,jsonify,Blueprint,flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
+
 from api.endpoints.data import ns as dataNS
 from api.define import api
 from api.endpoints.ui import *
 
 import settings
 from api.handlers.handlers import db
+from api.database.orms import *
 
 app = Flask(__name__)
 
 pageUIMapping = [ [UIHandler,"/"],
                   [UIHandler,"/ui"] ,
                   [UIHandler,"/ui/"],
+                  [LoginUIHandler,'/ui/login'],
                   [SampleUIHandler,"/ui/sample"],
                   [AlertsUIHandler, "/ui/alerts"],
 
@@ -30,6 +34,9 @@ pageUIMapping = [ [UIHandler,"/"],
 def configure_app(flask_app):
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = settings.SQLALCHEMY_DATABASE_URI
     flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    flask_app.config['SECRET_KEY'] = "_5#y2LF4Q8z\n\xec]/"
+    #flask_app.config['SESSION_TYPE'] = 'filesystem'
+    flask_app.config['SESSION_PERMANENT']= False
 
 def initialize_app(flask_app):
     configure_app(flask_app)
@@ -44,6 +51,14 @@ def initialize_app(flask_app):
     flask_app.register_blueprint(blueprint)
     db.app = flask_app
     db.init_app(flask_app)
+    login_manager = LoginManager()
+    login_manager.login_view = 'api.login_ui_handler'
+    login_manager.init_app(app)
+    @login_manager.user_loader
+    def load_user(user_id):
+        # since the user_id is just the primary key of our user table, use it in the query for the user
+        return User.query.get(int(user_id))
+
 
 
 initialize_app(app)
