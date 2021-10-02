@@ -48,6 +48,7 @@
                               <td >
                                 <span class="fa fa-remove" onclick="deleteEDIFile('{{ ec['edifile_id']}}')"></span>
                                 <span class="fa fa-pencil" onclick="setAndOpenEDIFileModal('{{ ec['edifile_id']}}')"></span>
+                                <span class="fa fa-download" onclick="downloadFile('{{ ec['edifile_id']}}')"></span>
                              </td>
 
                          </tr>
@@ -197,6 +198,30 @@
                     redirectHome();
                 }
             });
+        }
+
+        function downloadFile(edifile_id) {
+          var url = SingleEDIFileURL.replace("edifile_id", edifile_id);
+          var data = {};
+          var formData = JSON.stringify(data);
+
+          $.ajax({
+                 type: "GET",
+                 url: url,
+                 contentType: 'application/json',
+                 dataType: "json",
+                 headers: {'Content-Type': 'application/json'},
+                 success: function(data) {
+                   getPresignedUrlFromFileUrlAndDownload(data.data[0].filelink);
+
+                           },
+               error: function(xhr, status, error) {
+                 alert(status);
+                 alert(xhr.responseText);
+
+                   }
+              });
+
         }
 
 

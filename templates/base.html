@@ -61,6 +61,60 @@ var SingleSupplierURL =  "{{ url_for('api.v1_single_supplier_request', supplier_
 var GLAccountURL =  "{{ url_for('api.v1_gl_account_request') }}";
 var SingleGLAccountURL =  "{{ url_for('api.v1_single_gl_account_request', glaccount_id='glaccount_id') }}";
 
+function getPresignedUrlFromFileUrlAndDownload(fileUrl) {
+  var clickable = "{{ url_for('api.v1_presign_download_handler') }}";
+  var data = {"fileUrl": fileUrl };
+  var formData = JSON.stringify(data);
+
+  $.ajax({
+    type: "POST",
+    url: clickable,
+    data: formData,
+    contentType: 'application/json',
+    dataType: "json",
+    headers: {'Content-Type': 'application/json'},
+         success: function(data) {
+           var url = data.presignedUrl;
+           var a = document.createElement("a");
+           document.body.appendChild(a);
+    a.style = "display: none";
+    a.href = url;
+    a.download = "";
+    a.click();
+
+                   },
+       error: function(xhr, status, error) {
+         alert(status);
+         alert(xhr.responseText);
+
+           }
+      });
+
+}
+
+function downloadFile(id) {
+  var clickable = "{{ url_for('api.v1_presign_download_handler',id=0) }}".slice(0,-1).concat(id);
+  var data = {};
+  var formData = JSON.stringify(data);
+
+  $.ajax({
+         type: "GET",
+         url: clickable,
+         contentType: 'application/json',
+         dataType: "json",
+         headers: {'Content-Type': 'application/json'},
+         success: function(data) {
+           getPresignedUrlFromFileUrlAndDownload(data.TutorialeMedialLink);
+
+                   },
+       error: function(xhr, status, error) {
+         alert(status);
+         alert(xhr.responseText);
+
+           }
+      });
+
+}
 </script>
 
 <style>
@@ -180,7 +234,7 @@ footer  {
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-success">
   <a class="navbar-brand" href="#">
-    <img src="{{url_for('static', filename='images/cocacola.svg')}}" width="30" height="30" alt="">
+    <img src="{{url_for('static', filename='images/cocacola.png')}}" width="30" height="30" alt="">
 </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>

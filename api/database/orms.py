@@ -99,6 +99,7 @@ class accrual_task_status_details(db.Model):
 class edifile(db.Model):
     edifile_id = db.Column(db.String(255), primary_key=True)
     name = db.Column(db.String(255))
+    filelink = db.Column(db.String(255))
     postedOn = db.Column(db.DateTime(), unique=False, nullable=False)
     updatedOn = db.Column(db.DateTime(), unique=False, nullable=False)
 
@@ -106,6 +107,7 @@ class edifile(db.Model):
     def __init__(self,payload):
         self.edifile_id = str(uuid.uuid4())
         self.name = payload['name']
+        self.filelink = 'data/sample/file_example_XLSX_50.xlsx'
         self.postedOn = datetime.now()
         self.updatedOn = datetime.now()
 
@@ -114,6 +116,7 @@ class edifile(db.Model):
        response_payload = {}
        response_payload['edifile_id'] = self.edifile_id
        response_payload['name'] = self.name
+       response_payload['filelink'] = self.filelink
        return response_payload
 
 

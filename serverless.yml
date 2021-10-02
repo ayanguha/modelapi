@@ -7,6 +7,10 @@ provider:
   memorySize: 512
   timeout: 60
   profile: ${self:custom.profiles.${sls:stage}}
+  iam:
+    role:
+      managedPolicies:
+        - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 
 plugins:
   - serverless-wsgi

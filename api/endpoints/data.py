@@ -11,8 +11,11 @@ from ..handlers.transactions import *
 from ..handlers.auth import *
 from ..define import api
 import uuid
+import boto3
 
 from flask_login import login_user, logout_user, login_required
+S3_BUCKET =  'modelapi'
+
 
 
 ns = api.namespace('v1')
@@ -58,6 +61,30 @@ TransactionsRecord =  api.model('Transactions ', {
          'details': fields.List(fields.Nested(TransactionDetailsRecord))
 })
 
+def getS3Link(fileName):
+    template = "https://s3.amazonaws.com/<bucketName>/<fileKey>"
+    return template.replace("<bucketName>",S3_BUCKET).replace("<fileKey>",fileName)
+
+
+def getPresignedURLByFile(srcfilename, contenttype,destfolder):
+    session = boto3.session.Session(aws_access_key_id=S3_KEY,
+                                    aws_secret_access_key=S3_SECRET)
+    s3 = session.resource('s3')
+    srcfilename = secure_filename(srcfilename)
+    destFileName = destfolder + "/" + srcfilename
+
+    psurl = s3.meta.client.generate_presigned_url(
+    ClientMethod='put_object',
+    Params={'Bucket': S3_BUCKET,
+            'Key': destFileName,
+            "ContentType": contenttype,
+            "ContentDisposition": "attachment"
+            }
+           )
+    dwurl = getS3Link(destFileName)
+
+    return (psurl,dwurl)
+
 def BasicResponse(lst):
     response = BaseResponse()
     for a in lst:
@@ -92,6 +119,29 @@ def AccountResponse(list_account):
         account_response['data'].append(a)
     return account_response
 
+
+@ns.route('/presign/download')
+class PresignDownloadHandler(Resource):
+    def post(Resource):
+        fileUrl = request.json.get("fileUrl")
+        print(fileUrl)
+        filename = "/".join(fileUrl.split("/")[-1:])
+        print(filename)
+        session = boto3.session.Session()
+        s3 = session.resource('s3')
+        obj = s3.Object(S3_BUCKET,fileUrl)
+        print(">>>>>>>>>" + obj.content_type)
+        psurl = s3.meta.client.generate_presigned_url(
+                  ClientMethod='get_object',
+                  Params={'Bucket': S3_BUCKET,
+                          'Key': fileUrl
+                          }
+               )
+
+        print(psurl)
+        response = {"presignedUrl": psurl}
+
+        return response, 200
 
 @ns.route('/account')
 class AccountRecordRequest(Resource):
@@ -137,7 +187,7 @@ class LoginRequest(Resource):
         login_user(user)
         flash('Logged in successfully.')
         return redirect(next or url_for('api.ui_handler'))
-    
+
 
 @ns.route('/logout')
 class LogoutRequest(Resource):
