@@ -1,1 +1,1 @@
-{"name":"modelapi","description":"","version":"0.1.0","devDependencies":{"serverless-python-requirements":"^5.1.1","serverless-wsgi":"^2.0.1"}}
+{"name":"modelapi","description":"","version":"0.1.0","devDependencies":{"serverless-python-requirements":"^5.1.1","serverless-wsgi":"^2.0.1"},"dependencies":{"serverless-apigw-binary":"^0.4.4"}}
