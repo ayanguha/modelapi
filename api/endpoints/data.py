@@ -228,6 +228,7 @@ class SingleEDICategoryRequest(Resource):
 class EDIFileRequest(Resource):
     @api.expect(BasicRecord)
     def post(self):
+        print(request.json['inputDate'])
         response = addEdifile(request.json['name'])
         return BasicResponse(response),201
 

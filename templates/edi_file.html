@@ -23,7 +23,13 @@
            <form>
              <div class="form-group">
                <label for="type">Name:</label><input type="text" class="form-control" id="EDIFileName">
+               <label class="custom-file-upload">
+                  <input type="file"/>
+                  Custom Upload
+              </label>
 
+              <label for="inputDate">Date</label>
+                  <input type="input" class="form-control" id="inputDate">
                </div>
              <button type="button" class="btn btn-success" onclick="addEdiFile()">Submit</button>
            </form>
@@ -94,6 +100,9 @@
 
   <script type="text/javascript">
 
+    $('#inputDate').datepicker({
+    });
+
         function redirectHome() {
 
             window.location = location.href;
@@ -103,6 +112,7 @@
 
             var data = {
                 "name": $('#EDIFileName').val(),
+                "inputDate": $('#inputDate').val(),
 
             };
 

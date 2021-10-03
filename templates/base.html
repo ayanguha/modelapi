@@ -92,29 +92,7 @@ function getPresignedUrlFromFileUrlAndDownload(fileUrl) {
 
 }
 
-function downloadFile(id) {
-  var clickable = "{{ url_for('api.v1_presign_download_handler',id=0) }}".slice(0,-1).concat(id);
-  var data = {};
-  var formData = JSON.stringify(data);
 
-  $.ajax({
-         type: "GET",
-         url: clickable,
-         contentType: 'application/json',
-         dataType: "json",
-         headers: {'Content-Type': 'application/json'},
-         success: function(data) {
-           getPresignedUrlFromFileUrlAndDownload(data.TutorialeMedialLink);
-
-                   },
-       error: function(xhr, status, error) {
-         alert(status);
-         alert(xhr.responseText);
-
-           }
-      });
-
-}
 </script>
 
 <style>
@@ -128,6 +106,11 @@ textarea{
     background-color:gray !important;
 }
 
+.custom-file-upload {
+    display: inline-block;
+    background-color: green;
+    color: #fff;
+}
 
 .jumbotron {
   background-color: {{ uiconfig['backgrouound_color'] }};
