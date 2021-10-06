@@ -8,6 +8,13 @@
 
 <div class="container-fluid">
 
+  <label class="custom-file-upload">
+     <input id="fileupload" type="file"/>
+     Custom Upload
+ </label>
+ <button type="button" class="btn btn-success" onclick="uploadData()">Submit</button>
+
+
   <div id="EDIFileTOP">
       <div class="card">
        <div class="card-header" id="headingOne">
@@ -23,10 +30,7 @@
            <form>
              <div class="form-group">
                <label for="type">Name:</label><input type="text" class="form-control" id="EDIFileName">
-               <label class="custom-file-upload">
-                  <input type="file"/>
-                  Custom Upload
-              </label>
+
 
               <label for="inputDate">Date</label>
                   <input type="input" class="form-control" id="inputDate">
@@ -103,22 +107,99 @@
     $('#inputDate').datepicker({
     });
 
+    function parseAndPost(key) {
+
+      var data = {
+            "key": key
+        };
+
+        var formData = JSON.stringify(data);
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            data: formData,
+            contentType: 'application/json',
+            url: "{{ url_for('api.v1_edi_file_upload_many_request') }}",
+            success: function(result) {
+                redirectHome();
+            },
+            error: function(xhr, status, error) {
+                alert(status);
+                alert(xhr.responseText);
+                redirectHome();
+            }
+        });
+    }
+
+    function uploadAndPostEdiFile(psurl,dwurl) {
+              $.blockUI();
+              var file = $('#fileupload').get()[0].files[0];
+              var xhr = new XMLHttpRequest();
+              xhr.upload.addEventListener('progress', function(e){
+                     $('.progress-bar').css({
+                    width: (e.loaded / e.total) * 100 + '%'
+                });
+                   }, true);
+             xhr.open('PUT', psurl, true);
+             xhr.send(file);
+             xhr.onload = () => {
+               if (xhr.status == 200) {
+                 $.unblockUI();
+                 alert(dwurl);
+                 parseAndPost(dwurl);
+               }
+             }
+        }
         function redirectHome() {
 
             window.location = location.href;
         }
 
+        function uploadData() {
+          var filename = ($('#fileupload').get()[0].files[0]).name;
+          var contenttype = ($('#fileupload').get()[0].files[0]).type;
+
+            var data = {
+                "filename": filename,
+                "contenttype": contenttype,
+                "source_type": "EDI_FILE",
+            };
+           var formData = JSON.stringify(data);
+            jQuery.ajax({ url: "{{ url_for('api.v1_presign_upload_handler') }}",
+                         data: formData,
+                         contentType: 'application/json',
+                         type: 'POST',
+                        dataType: 'json',
+                        headers: {"Authorization": $('#hiddenToken').val()},
+                       success: function(data) {
+                               uploadAndPostEdiFile(data.presignedUrl,data.downloadUrl);
+
+                                },
+                      error: function(xhr, status, error) {
+                        alert(status);
+                        alert(xhr.responseText);
+                    }});
+
+        }
+
         function addEdiFile() {
+
+          var filename = ($('#fileupload').get()[0].files[0]).name;
+          var contenttype = ($('#fileupload').get()[0].files[0]).type;
 
             var data = {
                 "name": $('#EDIFileName').val(),
                 "inputDate": $('#inputDate').val(),
-
+                "filename": filename,
+                "contenttype": contenttype,
+                "source_type": "EDI_FILE",
             };
 
 
 
             var formData = JSON.stringify(data);
+
             $.ajax({
                 type: "POST",
                 cache: false,

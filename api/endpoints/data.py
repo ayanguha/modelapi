@@ -10,11 +10,14 @@ from ..handlers.files import *
 from ..handlers.transactions import *
 from ..handlers.auth import *
 from ..define import api
-import uuid
+from .util import *
+
+from werkzeug.utils import secure_filename
+import uuid, os
 import boto3
 
 from flask_login import login_user, logout_user, login_required
-S3_BUCKET =  'modelapi'
+
 
 
 
@@ -61,29 +64,6 @@ TransactionsRecord =  api.model('Transactions ', {
          'details': fields.List(fields.Nested(TransactionDetailsRecord))
 })
 
-def getS3Link(fileName):
-    template = "https://s3.amazonaws.com/<bucketName>/<fileKey>"
-    return template.replace("<bucketName>",S3_BUCKET).replace("<fileKey>",fileName)
-
-
-def getPresignedURLByFile(srcfilename, contenttype,destfolder):
-    session = boto3.session.Session(aws_access_key_id=S3_KEY,
-                                    aws_secret_access_key=S3_SECRET)
-    s3 = session.resource('s3')
-    srcfilename = secure_filename(srcfilename)
-    destFileName = destfolder + "/" + srcfilename
-
-    psurl = s3.meta.client.generate_presigned_url(
-    ClientMethod='put_object',
-    Params={'Bucket': S3_BUCKET,
-            'Key': destFileName,
-            "ContentType": contenttype,
-            "ContentDisposition": "attachment"
-            }
-           )
-    dwurl = getS3Link(destFileName)
-
-    return (psurl,dwurl)
 
 def BasicResponse(lst):
     response = BaseResponse()
@@ -124,9 +104,7 @@ def AccountResponse(list_account):
 class PresignDownloadHandler(Resource):
     def post(Resource):
         fileUrl = request.json.get("fileUrl")
-        print(fileUrl)
         filename = "/".join(fileUrl.split("/")[-1:])
-        print(filename)
         session = boto3.session.Session()
         s3 = session.resource('s3')
         obj = s3.Object(S3_BUCKET,fileUrl)
@@ -142,6 +120,18 @@ class PresignDownloadHandler(Resource):
         response = {"presignedUrl": psurl}
 
         return response, 200
+
+@ns.route('/presign/upload')
+class PresignUploadHandler(Resource):
+    def post(self):
+        filename = request.json.get("filename")
+        contenttype = request.json.get("contenttype")
+        source_type = request.json.get("source_type")
+        psurl,dwurl = getPresignedURLByFile(filename,contenttype,destfolder=source_type)
+        response = {"presignedUrl": psurl, "downloadUrl": dwurl}
+        print(response)
+        return response, 200
+
 
 @ns.route('/account')
 class AccountRecordRequest(Resource):
@@ -224,6 +214,17 @@ class SingleEDICategoryRequest(Resource):
         return BasicResponse(response), 200
 
 ###########################################################
+@ns.route('/dbm/edi_file/many')
+class EDIFileUploadManyRequest(Resource):
+    @api.expect(BasicRecord)
+    def post(self):
+        print(request.json['key'])
+        local_file = download_file(request.json['key'])
+        print(local_file)
+        data = parse_xls(local_file)
+        print(data)
+        return BasicResponse(response),201
+
 @ns.route('/dbm/edi_file')
 class EDIFileRequest(Resource):
     @api.expect(BasicRecord)
