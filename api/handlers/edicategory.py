@@ -16,8 +16,8 @@ def addEdiCategory(name):
     payload = {}
     payload['name'] = name
     r = edicategory(payload)
-
     db.session.add(r)
+    
     safeFlush()
     safeCommit()
     return getAllEdiCategory()

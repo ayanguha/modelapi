@@ -54,6 +54,9 @@ class Account(db.Model):
 
 
 class edicategory(db.Model):
+    __table_args__ = (
+        db.UniqueConstraint('name',  name='edicategory_unique_name'),
+    )
     edi_category_id = db.Column(db.String(255), primary_key=True)
     name = db.Column(db.String(255))
     postedOn = db.Column(db.DateTime(), unique=False, nullable=False)
