@@ -30,12 +30,8 @@
          </div>
 
          <div class="container-fluid">
-            <table class="table table-hover table-striped" data-filter-control="select"
-                   data-toggle="table"
-                   data-search="true"
-                   data-pagination="true"
-                   data-page-size="50"
-                   data-pagination-V-Align="top">
+            <table class="table table-hover table-striped"
+                   data-search="true" id="dtBasicExample">
                   <thead>
                     <tr>
                       <th>  Name </th>
@@ -93,6 +89,15 @@
 
 <script type="text/javascript">
 
+  // Basic example
+  $(document).ready(function () {
+    $('#dtBasicExample').DataTable({
+      "paging": true,
+      "pagingType": "simple" // "simple" option for 'Previous' and 'Next' buttons only
+    });
+    $('.dataTables_length').addClass('bs-select');
+  });
+
   function redirectHome() {
 
       window.location = location.href;
@@ -118,7 +123,7 @@
               redirectHome();
           },
           error: function(xhr, status, error) {
-              
+
               alert(xhr.responseText);
               redirectHome();
           }
